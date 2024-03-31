@@ -1,7 +1,8 @@
 body {
     background: #000000;
-      color: #00000;
-  }
+      color: black
+}
+
   h1 {
     color: white
  } 
@@ -11,3 +12,7 @@ body {
     color: white
  }
  
+
+ .img-omg {
+   width: 100px; 
+}
