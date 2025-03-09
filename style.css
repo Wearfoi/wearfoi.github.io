@@ -1,18 +1,29 @@
-body {
-    background: #000000;
-      color: black
+/* Reset default margin and padding */
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+    background-color: white;
 }
 
-  h1 {
-    color: white
- } 
- 
- 
- p {
-    color: white
- }
- 
+/* Center the audio player vertically and horizontally */
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
- .img-omg {
-   width: 100px; 
+/* Style the audio player */
+audio {
+    width: 300px;
+    background-color: #f1f1f1;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Add hover effect to the audio player */
+audio:hover {
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
