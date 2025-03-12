@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>wind hoppa</title> <!-- Updated title to "wind hoppa" -->
+    <!-- Add favicon -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap" rel="stylesheet">
+    <!-- Add Font Awesome CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: 'Libre Baskerville', serif;
+            background-color: #fee5a6; /* Same background color */
+        }
+
+        .audio-player {
+            text-align: center;
+        }
+
+        #play-pause {
+            padding: 25px 50px; /* Bigger padding */
+            font-size: 48px; /* Bigger font size */
+            font-weight: bold;
+            color: white;
+            background-color: #fee5a6;
+            border: none; /* Remove the border */
+            border-radius: 40px; /* Bigger border radius */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #play-pause:hover {
+            background-color: #fcd88c;
+        }
+
+        #progress-container {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Bigger gap */
+            width: 100%;
+            max-width: 800px; /* Longer progress bar */
+            margin: 40px auto; /* Bigger margin */
+        }
+
+        #progress-bar {
+            flex: 1;
+            height: 12px; /* Thicker progress bar */
+            background-color: #ccc;
+            position: relative;
+            border-radius: 6px; /* Bigger border radius */
+            cursor: pointer;
+        }
+
+        #progress {
+            height: 100%;
+            background-color: white; /* Progress bar turns white */
+            width: 0;
+            border-radius: 6px; /* Bigger border radius */
+            transition: width 0.1s linear; /* Smooth animation */
+        }
+
+        #thumb {
+            width: 24px; /* Bigger thumb */
+            height: 24px; /* Bigger thumb */
+            background-color: white; /* Thumb is white */
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: left 0.1s linear; /* Smooth animation */
+        }
+
+        #time-display {
+            font-size: 24px; /* Bigger font size */
+            color: white; /* Time display is white */
+        }
+
+        /* Volume Control */
+        #volume-container {
+            display: flex;
+            align-items: center;
+            gap: 20px; /* Bigger gap */
+            margin-top: 40px; /* Bigger margin */
+        }
+
+        #volume-bar {
+            width: 200px; /* Longer volume bar */
+            height: 12px; /* Thicker volume bar */
+            background-color: #ccc;
+            position: relative;
+            border-radius: 6px; /* Bigger border radius */
+            cursor: pointer;
+        }
+
+        #volume-progress {
+            height: 100%;
+            background-color: white; /* Volume progress bar is white */
+            width: 100%; /* Default to full volume */
+            border-radius: 6px; /* Bigger border radius */
+            transition: width 0.1s linear; /* Smooth animation */
+        }
+
+        #volume-thumb {
+            width: 24px; /* Bigger thumb */
+            height: 24px; /* Bigger thumb */
+            background-color: white; /* Volume thumb is white */
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translate(-50%, -50%);
+            cursor: pointer;
+            transition: left 0.1s linear; /* Smooth animation */
+        }
+    </style>
+</head>
+<body>
+    <div class="audio-player">
+        <button id="play-pause"><i class="fas fa-play"></i></button> <!-- Font Awesome play icon -->
+        <div id="progress-container">
+            <div id="progress-bar">
+                <div id="progress"></div>
+                <div id="thumb"></div>
+            </div>
+            <div id="time-display">0:00/0:00</div>
+        </div>
+        <!-- Volume Control -->
+        <div id="volume-container">
+            <i id="volume-icon" class="fas fa-volume-up" style="color: white; cursor: pointer;"></i> <!-- Volume icon -->
+            <div id="volume-bar">
+                <div id="volume-progress"></div>
+                <div id="volume-thumb"></div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audio" src="wind-hoppa.mp3"></audio>
+
+    <script>
+        const audio = document.getElementById('audio');
+        const playPauseButton = document.getElementById('play-pause');
+        const progressBar = document.getElementById('progress-bar');
+        const progress = document.getElementById('progress');
+        const thumb = document.getElementById('thumb');
+        const timeDisplay = document.getElementById('time-display');
+        const volumeBar = document.getElementById('volume-bar');
+        const volumeProgress = document.getElementById('volume-progress');
+        const volumeThumb = document.getElementById('volume-thumb');
+        const volumeIcon = document.getElementById('volume-icon');
+
+        let isDragging = false;
+        let isVolumeDragging = false;
+        let isMuted = false;
+
+        // Play/Pause functionality
+        playPauseButton.addEventListener('click', () => {
+            if (audio.paused) {
+                audio.play();
+                playPauseButton.innerHTML = '<i class="fas fa-pause"></i>'; // Font Awesome pause icon
+            } else {
+                audio.pause();
+                playPauseButton.innerHTML = '<i class="fas fa-play"></i>'; // Font Awesome play icon
+            }
+        });
+
+        // Update progress bar and time display
+        audio.addEventListener('timeupdate', () => {
+            if (!isDragging) {
+                const percent = (audio.currentTime / audio.duration) * 100;
+                progress.style.width = `${percent}%`;
+                thumb.style.left = `${percent}%`;
+            }
+            updateTimeDisplay();
+        });
+
+        // Seek functionality on click
+        progressBar.addEventListener('click', (e) => {
+            const progressBarRect = progressBar.getBoundingClientRect();
+            const clickPosition = e.clientX - progressBarRect.left;
+            const progressBarWidth = progressBarRect.width;
+            const seekTime = (clickPosition / progressBarWidth) * audio.duration;
+            audio.currentTime = seekTime;
+        });
+
+        // Seek functionality on drag
+        thumb.addEventListener('mousedown', (e) => {
+            isDragging = true;
+            document.addEventListener('mousemove', onProgressDrag);
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+                document.removeEventListener('mousemove', onProgressDrag);
+            });
+        });
+
+        thumb.addEventListener('touchstart', (e) => {
+            isDragging = true;
+            document.addEventListener('touchmove', onProgressDrag);
+            document.addEventListener('touchend', () => {
+                isDragging = false;
+                document.removeEventListener('touchmove', onProgressDrag);
+            });
+        });
+
+        function onProgressDrag(e) {
+            if (isDragging) {
+                const progressBarRect = progressBar.getBoundingClientRect();
+                const clickPosition = e.clientX ? e.clientX - progressBarRect.left : e.touches[0].clientX - progressBarRect.left;
+                const progressBarWidth = progressBarRect.width;
+                const seekTime = (clickPosition / progressBarWidth) * audio.duration;
+                audio.currentTime = seekTime;
+            }
+        }
+
+        // Volume control functionality
+        volumeBar.addEventListener('click', (e) => {
+            const volumeBarRect = volumeBar.getBoundingClientRect();
+            const clickPosition = e.clientX - volumeBarRect.left;
+            const volumeBarWidth = volumeBarRect.width;
+            const volumeLevel = Math.min(1, Math.max(0, clickPosition / volumeBarWidth));
+            audio.volume = volumeLevel;
+            updateVolumeProgress(volumeLevel);
+            if (isMuted) {
+                isMuted = false;
+                audio.muted = false;
+                volumeIcon.classList.remove('fa-volume-mute');
+                volumeIcon.classList.add('fa-volume-up');
+            }
+        });
+
+        volumeThumb.addEventListener('mousedown', (e) => {
+            isVolumeDragging = true;
+            document.addEventListener('mousemove', onVolumeDrag);
+            document.addEventListener('mouseup', () => {
+                isVolumeDragging = false;
+                document.removeEventListener('mousemove', onVolumeDrag);
+            });
+        });
+
+        volumeThumb.addEventListener('touchstart', (e) => {
+            isVolumeDragging = true;
+            document.addEventListener('touchmove', onVolumeDrag);
+            document.addEventListener('touchend', () => {
+                isVolumeDragging = false;
+                document.removeEventListener('touchmove', onVolumeDrag);
+            });
+        });
+
+        function onVolumeDrag(e) {
+            if (isVolumeDragging) {
+                const volumeBarRect = volumeBar.getBoundingClientRect();
+                const clickPosition = e.clientX ? e.clientX - volumeBarRect.left : e.touches[0].clientX - volumeBarRect.left;
+                const volumeBarWidth = volumeBarRect.width;
+                const volumeLevel = Math.min(1, Math.max(0, clickPosition / volumeBarWidth));
+                audio.volume = volumeLevel;
+                updateVolumeProgress(volumeLevel);
+                if (isMuted) {
+                    isMuted = false;
+                    audio.muted = false;
+                    volumeIcon.classList.remove('fa-volume-mute');
+                    volumeIcon.classList.add('fa-volume-up');
+                }
+            }
+        }
+
+        // Mute/Unmute functionality
+        volumeIcon.addEventListener('click', () => {
+            isMuted = !isMuted;
+            audio.muted = isMuted;
+            if (isMuted) {
+                volumeIcon.classList.remove('fa-volume-up');
+                volumeIcon.classList.add('fa-volume-mute');
+            } else {
+                volumeIcon.classList.remove('fa-volume-mute');
+                volumeIcon.classList.add('fa-volume-up');
+            }
+        });
+
+        // Update volume progress
+        function updateVolumeProgress(volumeLevel) {
+            const percent = volumeLevel * 100;
+            volumeProgress.style.width = `${percent}%`;
+            volumeThumb.style.left = `${percent}%`;
+        }
+
+        // Update time display
+        function updateTimeDisplay() {
+            const currentTime = formatTime(audio.currentTime);
+            const totalTime = formatTime(audio.duration);
+            timeDisplay.textContent = `${currentTime}/${totalTime}`;
+        }
+
+        // Format time in MM:SS format
+        function formatTime(time) {
+            const minutes = Math.floor(time / 60);
+            const seconds = Math.floor(time % 60);
+            return `${minutes}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        // Initialize time display
+        audio.addEventListener('loadedmetadata', () => {
+            updateTimeDisplay();
+        });
+    </script>
+</body>
+</html>
