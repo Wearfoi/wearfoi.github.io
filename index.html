@@ -3,180 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Wearfoi</title> <!-- Updated website name -->
-    <!-- Add favicon -->
+    <title>Wearfoi</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap" rel="stylesheet">
-    <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
-            font-family: 'Libre Baskerville', serif;
-            background-color: #fee5a6; /* Background color */
-        }
-
-        .countdown-timer {
-            font-size: 32px; /* Bigger font size */
-            font-weight: bold;
-            color: white; /* Changed to white */
-            margin-bottom: 20px; /* Space between timer and image */
-        }
-
-        .image-container {
-            position: relative; /* Required for tooltip positioning */
-            display: inline-block; /* Ensure the container wraps the image */
-        }
-
-        img {
-            width: 500px; /* Fixed size for desktop */
-            height: 500px; /* Fixed size for desktop */
-            object-fit: cover; /* Ensures the image fills the square without distortion */
-            border-radius: 10px; /* Rounded corners */
-            cursor: pointer; /* Indicates the image is clickable */
-        }
-
-        /* Tooltip for the image */
-        .image-container::after {
-            content: "Wind Hoppa"; /* Tooltip text */
-            position: absolute;
-            bottom: 100%; /* Position above the image */
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 5px 10px;
-            background-color: #333;
-            color: #fff;
-            border-radius: 5px;
-            font-size: 14px;
-            font-weight: normal;
-            white-space: nowrap;
-            opacity: 0; /* Hide by default */
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        .image-container:hover::after {
-            opacity: 1; /* Show on hover */
-            visibility: visible;
-        }
-
-        a {
-            text-decoration: none; /* Remove underline from the link */
-            position: relative; /* Required for button tooltip positioning */
-            display: inline-block; /* Ensure the link wraps the button */
-        }
-
-        button {
-            margin-top: 20px;
-            padding: 15px 30px; /* Bigger padding for mobile */
-            font-size: 24px; /* Bigger font size for mobile */
-            font-weight: bold;
-            color: white;
-            background-color: #fee5a6;
-            border: 2px solid white;
-            border-radius: 25px;
-            cursor: pointer;
-            font-family: 'Libre Baskerville', serif;
-            transition: background-color 0.3s ease;
-            position: relative; /* Required for tooltip positioning */
-        }
-
-        button:hover {
-            background-color: #fcd88c;
-        }
-
-        /* Tooltip for the button */
-        button::after {
-            content: attr(data-tooltip); /* Display the tooltip text */
-            position: absolute;
-            bottom: 100%; /* Position above the button */
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 5px 10px;
-            background-color: #333;
-            color: #fff;
-            border-radius: 5px;
-            font-size: 14px;
-            font-weight: normal;
-            white-space: nowrap;
-            opacity: 0; /* Hide by default */
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-        }
-
-        button:hover::after {
-            opacity: 1; /* Show on hover */
-            visibility: visible;
-        }
-
-        /* Mobile-specific styles */
-        @media (max-width: 600px) {
-            .countdown-timer {
-                font-size: 24px; /* Smaller font size for mobile */
-            }
-
-            img {
-                width: 90%; /* Responsive width on small screens */
-                height: auto; /* Maintain aspect ratio */
-                max-width: 500px; /* Limit maximum size */
-            }
-
-            button {
-                padding: 12px 24px; /* Slightly smaller padding for mobile */
-                font-size: 20px; /* Slightly smaller font size for mobile */
-            }
-        }
-    </style>
 </head>
 <body>
+   <!-- Logo, About, and Socials Links -->
+<div class="header">
+    <a href="index.html">
+        <img src="logo.png" alt="Logo" class="logo">
+    </a>
+    <a href="about.html" class="about-link">About</a>
+    <a href="socials.html" class="socials-link">Socials</a>
+    <!-- Dark Mode Toggle Button -->
+<button id="dark-mode-toggle" class="dark-mode-toggle"></button>
+</div>
+
     <!-- Audio element (hidden) -->
     <audio id="background-audio" loop>
         <source src="background-music.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
+    <!-- Countdown Timer -->
     <div class="countdown-timer" id="countdown-timer">Loading countdown...</div>
+
+    <!-- Image Container -->
     <div class="image-container">
-        <img src="snowman-announcement.jpg" alt="snowman march 19th" onclick="window.location.href='audio-player.html'">
+        <img id="snowman-image" src="snowman-announcement.jpg" alt="Snowman March 19th" onclick="window.location.href='audio-player.html'">
     </div>
+    <!-- Pre-Save Button -->
     <a href="https://distrokid.com/hyperfollow/wearfoi/snowman" target="_blank">
-        <button data-tooltip="https://distrokid.com/hyperfollow/wearfoi/snowman">Pre-Save</button>
+        <button data-tooltip="Pre-Save on DistroKid">Pre-Save</button>
     </a>
 
+   <!-- Footer -->
+<div class="footer">
+    <div class="footer-left"><a href="https://www.instagram.com/freedomtothesound/" target="_blank">℗©freedomtothesound</a></div>
+    <div class="footer-center"><a href="index.html">Wearfoi</a></div>
+    <div class="footer-right"><a href="contact.html">Contact</a></div>
+</div>
+
     <script>
-        // Set the target date and time (March 19, 2025, 12:00 AM)
+        // Countdown Timer
         const targetDate = new Date('March 19, 2025 00:00:00').getTime();
-
-        // Update the countdown every second
         const countdownTimer = document.getElementById('countdown-timer');
-        const interval = setInterval(() => {
-            const now = new Date().getTime(); // Current time
-            const timeRemaining = targetDate - now; // Time remaining in milliseconds
 
-            // Check if the countdown is over
+        const interval = setInterval(() => {
+            const now = new Date().getTime();
+            const timeRemaining = targetDate - now;
+
             if (timeRemaining <= 0) {
                 clearInterval(interval);
                 countdownTimer.textContent = "Countdown expired!";
                 return;
             }
 
-            // Calculate days, hours, minutes, and seconds
             const days = Math.floor(timeRemaining / (1000 * 60 * 60 * 24));
             const hours = Math.floor((timeRemaining % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const minutes = Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((timeRemaining % (1000 * 60)) / 1000);
 
-            // Display the countdown
             countdownTimer.textContent = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-        }, 1000); // Update every second
+        }, 1000);
 
-        // Play background audio on loop at low volume
+        // Background Audio
         const backgroundAudio = document.getElementById('background-audio');
-        backgroundAudio.volume = 0.2; // Set volume to 20%
-        backgroundAudio.play(); // Start playback
+        backgroundAudio.volume = 0.2;
+        backgroundAudio.play();
     </script>
+
+<script>
+    // Dark Mode Toggle
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const body = document.body;
+    const snowmanImage = document.getElementById('snowman-image'); // Only for index.html
+
+    // Check localStorage for dark mode preference
+    if (localStorage.getItem('dark-mode') === 'enabled') {
+        body.classList.add('dark-mode');
+        if (snowmanImage) {
+            snowmanImage.src = 'snowman-announcement-inverted.jpg'; // Set inverted image
+        }
+    }
+
+    darkModeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode'); // Toggle dark mode class
+
+        // Switch image source based on dark mode state (only for index.html)
+        if (snowmanImage) {
+            if (body.classList.contains('dark-mode')) {
+                snowmanImage.src = 'snowman-announcement-inverted.jpg'; // Inverted image
+            } else {
+                snowmanImage.src = 'snowman-announcement.jpg'; // Original image
+            }
+        }
+
+        // Save preference to localStorage
+        if (body.classList.contains('dark-mode')) {
+            localStorage.setItem('dark-mode', 'enabled');
+        } else {
+            localStorage.setItem('dark-mode', 'disabled');
+        }
+    });
+
+    // Apply dark mode to all pages on load
+    window.addEventListener('load', () => {
+        if (localStorage.getItem('dark-mode') === 'enabled') {
+            body.classList.add('dark-mode');
+            if (snowmanImage) {
+                snowmanImage.src = 'snowman-announcement-inverted.jpg'; // Set inverted image
+            }
+        } else {
+            body.classList.remove('dark-mode');
+            if (snowmanImage) {
+                snowmanImage.src = 'snowman-announcement.jpg'; // Set original image
+            }
+        }
+    });
+
+    // Ensure the image is fully loaded before displaying it (only for index.html)
+    if (snowmanImage) {
+        snowmanImage.onload = () => {
+            snowmanImage.style.opacity = 1; // Make the image visible
+        };
+    }
+</script>
+
 </body>
 </html>

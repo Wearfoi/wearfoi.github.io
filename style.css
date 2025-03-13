@@ -1,0 +1,376 @@
+/* Global Styles */
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    font-family: 'Libre Baskerville', serif;
+    background-color: #fee5a6;
+    color: black; /* Default text color */
+    position: relative;
+    transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
+}
+
+/* Dark Mode Styles */
+body.dark-mode {
+    background-color: #1a1a1a; /* Dark background */
+    color: white; /* Light text */
+}
+
+/* Dark Mode Toggle Button */
+.dark-mode-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Circular button */
+    background-color: white; /* White button */
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+body.dark-mode .dark-mode-toggle {
+    background-color: black; /* Black button in dark mode */
+}
+
+/* Image Container (Index.html) */
+.image-container {
+    cursor: pointer;
+    text-align: center; /* Center the image */
+    position: relative; /* Ensure proper positioning */
+}
+
+.image-container img {
+    width: 100%; /* Responsive width */
+    max-width: 500px; /* Limit maximum size */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px; /* Rounded corners */
+    transition: opacity 0.3s ease; /* Smooth transition */
+    opacity: 1; /* Ensure the image is visible by default */
+}
+
+/* Header (Logo, About, and Socials Links) */
+.header {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    z-index: 1000;
+}
+
+.logo {
+    width: 50px;
+    height: auto;
+    cursor: pointer;
+}
+
+.about-link, .socials-link {
+    font-size: 18px;
+    color: inherit; /* Inherit body color */
+    text-decoration: none;
+}
+
+.about-link:hover, .socials-link:hover {
+    text-decoration: underline;
+}
+
+/* Dark Mode Toggle Button */
+.dark-mode-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%; /* Circular button */
+    background-color: white; /* White button */
+    border: none;
+    cursor: pointer;
+    z-index: 1000;
+    transition: background-color 0.3s ease; /* Smooth transition */
+}
+
+body.dark-mode .dark-mode-toggle {
+    background-color: black; /* Black button in dark mode */
+}
+
+/* Countdown Timer (Index.html) */
+.countdown-timer {
+    font-size: 32px;
+    font-weight: bold;
+    color: inherit; /* Inherit body color */
+    margin-bottom: 20px;
+    text-align: center; /* Center text */
+}
+
+/* Image Container (Index.html) */
+.image-container {
+    cursor: pointer;
+    text-align: center; /* Center the image */
+    position: relative; /* Ensure proper positioning */
+}
+
+.image-container img {
+    width: 100%; /* Responsive width */
+    max-width: 500px; /* Limit maximum size */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: 10px; /* Rounded corners */
+    transition: opacity 0.3s ease; /* Smooth transition */
+    opacity: 1; /* Ensure the image is visible by default */
+}
+body.dark-mode .image-container img {
+    opacity: 0; /* Hide original image in dark mode */
+}
+
+body.dark-mode .image-container::after {
+    content: "";
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    background-image: url('snowman-announcement-inverted.jpg'); /* Inverted image */
+    background-size: cover;
+    border-radius: 10px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* Pre-Save Button (Index.html) */
+button:not(.dark-mode-toggle) {
+    margin-top: 20px;
+    padding: 15px 30px;
+    font-size: 24px;
+    font-weight: bold;
+    color: black; /* Black text in light mode */
+    background-color: #fee5a6; /* Light mode background */
+    border: 2px solid black; /* Black border in light mode */
+    border-radius: 25px;
+    cursor: pointer;
+    font-family: 'Libre Baskerville', serif;
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark-mode button:not(.dark-mode-toggle) {
+    color: white; /* White text in dark mode */
+    background-color: #1a1a1a; /* Dark mode background */
+    border-color: white; /* White border in dark mode */
+}
+
+button:not(.dark-mode-toggle):hover {
+    background-color: #fcd88c; /* Light mode hover */
+}
+
+body.dark-mode button:not(.dark-mode-toggle):hover {
+    background-color: #333; /* Dark mode hover */
+}
+
+/* Audio Player Styles (Audio-player.html) */
+.audio-player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    width: 90%;
+    max-width: 400px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: transparent; /* Transparent background */
+    border-radius: 15px;
+}
+
+/* Play/Pause Button (Audio-player.html) */
+#play-pause {
+    background-color: #fee5a6; /* Light mode background */
+    border: 2px solid black; /* Black border in light mode */
+    color: black; /* Black text in light mode */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark-mode #play-pause {
+    background-color: #1a1a1a; /* Dark mode background */
+    border-color: white; /* White border in dark mode */
+    color: white; /* White text in dark mode */
+}
+
+/* Progress Bar (Audio-player.html) */
+.progress-container {
+    width: 100%;
+    position: relative;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 5px;
+    background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.progress {
+    height: 100%;
+    background-color: white; /* White progress */
+    border-radius: 5px;
+    width: 0%;
+}
+
+/* Time Display (Audio-player.html) */
+.time-display {
+    font-size: 16px; /* Increased font size */
+    color: inherit; /* Inherit body color */
+    margin-top: 5px;
+    text-align: center; /* Center text */
+}
+
+/* About Page Styles (About.html) */
+.about-content {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.about-content h1 {
+    font-size: 48px;
+    color: inherit; /* Inherit body color */
+}
+
+/* Contact Page Styles (Contact.html) */
+.contact-content {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.contact-content h1 {
+    font-size: 48px; /* Same size as About page */
+    color: inherit; /* Inherit body color */
+}
+
+/* Socials Page Styles (Socials.html) */
+.socials-content {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.socials-content h1 {
+    font-size: 48px; /* Same size as About page */
+    color: inherit; /* Inherit body color */
+}
+
+.socials-content h1 a {
+    color: inherit; /* Inherit body color */
+    text-decoration: none;
+}
+
+.socials-content h1 a:hover {
+    text-decoration: underline;
+}
+
+/* Footer (All Pages) */
+.footer {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center; /* Center items vertically */
+    padding: 0 20px;
+    font-size: 18px;
+    color: inherit; /* Inherit body color */
+}
+
+.footer-left {
+    text-align: left; /* Align to the far left */
+    flex: 1;
+}
+
+.footer-left a {
+    color: inherit; /* Inherit body color */
+    text-decoration: none;
+}
+
+.footer-left a:hover {
+    text-decoration: underline;
+}
+
+.footer-center {
+    text-align: center; /* Center the Wearfoi text */
+    flex: 1;
+}
+
+.footer-center a {
+    color: inherit; /* Inherit body color */
+    text-decoration: none;
+}
+
+.footer-center a:hover {
+    text-decoration: underline;
+}
+
+.footer-right {
+    text-align: right; /* Align to the far right */
+    flex: 1;
+}
+
+.footer-right a {
+    color: inherit; /* Inherit body color */
+    text-decoration: none;
+}
+
+.footer-right a:hover {
+    text-decoration: underline;
+}
+
+/* Mobile Styles */
+@media (max-width: 600px) {
+    /* Index.html Mobile Styles */
+    .countdown-timer {
+        font-size: 24px;
+    }
+
+    .image-container img {
+        width: 90%; /* Responsive width on small screens */
+        max-width: 500px; /* Limit maximum size */
+    }
+
+    button:not(.dark-mode-toggle) {
+        padding: 12px 24px;
+        font-size: 20px;
+    }
+
+    /* Audio-player.html Mobile Styles */
+    .audio-player {
+        padding: 15px;
+    }
+
+    .time-display {
+        font-size: 14px; /* Slightly smaller on mobile */
+    }
+
+    #play-pause {
+        font-size: 20px;
+    }
+
+    /* About, Contact, and Socials Pages Mobile Styles */
+    .about-content h1, .contact-content h1, .socials-content h1 {
+        font-size: 36px; /* Slightly smaller on mobile */
+    }
+
+    /* Footer Mobile Styles */
+    .footer {
+        font-size: 14px;
+        flex-direction: column; /* Stack footer items vertically on mobile */
+        gap: 10px; /* Add space between items */
+        padding: 10px 0; /* Adjust padding */
+    }
+
+    .footer-left, .footer-center, .footer-right {
+        text-align: center; /* Center text on mobile */
+    }
+}
