@@ -38,20 +38,21 @@ body.dark-mode .dark-mode-toggle {
     background-color: black; /* Black button in dark mode */
 }
 
-/* Image Container (Index.html) */
-.image-container {
-    cursor: pointer;
-    text-align: center; /* Center the image */
-    position: relative; /* Ensure proper positioning */
+/* Logo Spin Animation */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
 
-.image-container img {
-    width: 100%; /* Responsive width */
-    max-width: 500px; /* Limit maximum size */
-    height: auto; /* Maintain aspect ratio */
-    border-radius: 10px; /* Rounded corners */
-    transition: opacity 0.3s ease; /* Smooth transition */
-    opacity: 1; /* Ensure the image is visible by default */
+.logo {
+    width: 50px;
+    height: auto;
+    cursor: pointer;
+    animation: spin 5s linear infinite; /* Spin animation */
 }
 
 /* Header (Logo, About, and Socials Links) */
@@ -65,48 +66,14 @@ body.dark-mode .dark-mode-toggle {
     z-index: 1000;
 }
 
-.logo {
-    width: 50px;
-    height: auto;
-    cursor: pointer;
-}
-
-.about-link, .socials-link {
+.about-link, .socials-link, .blog-link {
     font-size: 18px;
     color: inherit; /* Inherit body color */
-    text-decoration: none;
+    text-decoration: none; /* No underline by default */
 }
 
-.about-link:hover, .socials-link:hover {
-    text-decoration: underline;
-}
-
-/* Dark Mode Toggle Button */
-.dark-mode-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%; /* Circular button */
-    background-color: white; /* White button */
-    border: none;
-    cursor: pointer;
-    z-index: 1000;
-    transition: background-color 0.3s ease; /* Smooth transition */
-}
-
-body.dark-mode .dark-mode-toggle {
-    background-color: black; /* Black button in dark mode */
-}
-
-/* Countdown Timer (Index.html) */
-.countdown-timer {
-    font-size: 32px;
-    font-weight: bold;
-    color: inherit; /* Inherit body color */
-    margin-bottom: 20px;
-    text-align: center; /* Center text */
+.about-link:hover, .socials-link:hover, .blog-link:hover {
+    text-decoration: underline; /* Underline on hover */
 }
 
 /* Image Container (Index.html) */
@@ -124,6 +91,7 @@ body.dark-mode .dark-mode-toggle {
     transition: opacity 0.3s ease; /* Smooth transition */
     opacity: 1; /* Ensure the image is visible by default */
 }
+
 body.dark-mode .image-container img {
     opacity: 0; /* Hide original image in dark mode */
 }
@@ -141,6 +109,15 @@ body.dark-mode .image-container::after {
     top: 0;
     left: 50%;
     transform: translateX(-50%);
+}
+
+/* Countdown Timer (Index.html) */
+.countdown-timer {
+    font-size: 32px;
+    font-weight: bold;
+    color: inherit; /* Inherit body color */
+    margin-bottom: 20px;
+    text-align: center; /* Center text */
 }
 
 /* Pre-Save Button (Index.html) */
@@ -247,8 +224,48 @@ body.dark-mode #play-pause {
 }
 
 .contact-content h1 {
-    font-size: 48px; /* Same size as About page */
+    font-size: 36px; /* Smaller font size */
     color: inherit; /* Inherit body color */
+}
+/* Blog Page Styles (blog.html) */
+
+.blog-content {
+    text-align: center;
+    margin-top: 100px;
+}
+
+.blog-content h1 {
+    font-size: 48px;
+    color: inherit; /* Inherit body color */
+}
+
+.blog-content h1 a {
+    color: inherit; /* Inherit body color */
+    text-decoration: none; /* No underline by default */
+}
+
+.blog-content h1 a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+/* Blog #1 Page Styles (blog1.html) */
+.editable-text {
+    font-size: 48px; /* Same size as the previous "Blog" heading */
+    color: inherit; /* Inherit body color */
+    margin-top: 20px;
+}
+
+/* Mobile Styles */
+@media (max-width: 600px) {
+    /* Blog Page Mobile Styles */
+    .blog-content h1 {
+        font-size: 36px; /* Slightly smaller on mobile */
+    }
+
+    /* Blog #1 Page Mobile Styles */
+    .editable-text {
+        font-size: 36px; /* Slightly smaller on mobile */
+    }
 }
 
 /* Socials Page Styles (Socials.html) */
@@ -258,17 +275,21 @@ body.dark-mode #play-pause {
 }
 
 .socials-content h1 {
-    font-size: 48px; /* Same size as About page */
+    font-size: 48px;
     color: inherit; /* Inherit body color */
 }
 
 .socials-content h1 a {
-    color: inherit; /* Inherit body color */
-    text-decoration: none;
+    color: white; /* Force white text */
+    text-decoration: none; /* No underline by default */
 }
 
 .socials-content h1 a:hover {
-    text-decoration: underline;
+    text-decoration: underline; /* Underline on hover */
+}
+
+body.dark-mode .socials-content h1 a {
+    color: white; /* Ensure white text in dark mode */
 }
 
 /* Footer (All Pages) */
@@ -357,9 +378,17 @@ body.dark-mode #play-pause {
         font-size: 20px;
     }
 
-    /* About, Contact, and Socials Pages Mobile Styles */
-    .about-content h1, .contact-content h1, .socials-content h1 {
+    /* About, Contact, and Blog Pages Mobile Styles */
+    .about-content h1, .contact-content h1, .blog-content h1 {
         font-size: 36px; /* Slightly smaller on mobile */
+    }
+
+    .contact-content h1 {
+        font-size: 24px; /* Smaller font size on mobile */
+    }
+
+    .editable-text {
+        font-size: 16px; /* Slightly smaller on mobile */
     }
 
     /* Footer Mobile Styles */
