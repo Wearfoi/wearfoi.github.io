@@ -227,8 +227,8 @@ body.dark-mode #play-pause {
     font-size: 36px; /* Smaller font size */
     color: inherit; /* Inherit body color */
 }
-/* Blog Page Styles (blog.html) */
 
+/* Blog Page Styles (blog.html) */
 .blog-content {
     text-align: center;
     margin-top: 100px;
@@ -255,17 +255,65 @@ body.dark-mode #play-pause {
     margin-top: 20px;
 }
 
-/* Mobile Styles */
-@media (max-width: 600px) {
-    /* Blog Page Mobile Styles */
-    .blog-content h1 {
-        font-size: 36px; /* Slightly smaller on mobile */
-    }
+/* Snowman Page Styles (snowman.html) */
+.album-landing-content {
+    text-align: center;
+    margin-top: 100px;
+    padding-bottom: 100px; /* Prevent footer overlap on mobile */
+}
 
-    /* Blog #1 Page Mobile Styles */
-    .editable-text {
-        font-size: 36px; /* Slightly smaller on mobile */
-    }
+.album-title {
+    font-size: 40px;
+    color: inherit; /* Inherit body color */
+    margin-bottom: 10px;
+}
+
+.album-cover {
+    width: 100%;
+    max-width: 400px; /* Increased size */
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 0px;
+}
+
+.streaming-links {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 5px;
+}
+
+.streaming-button {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 10px 20px;
+    background-color: #fee5a6; /* Light mode background */
+    border: 2px solid black; /* Light mode border */
+    border-radius: 25px;
+    text-decoration: none;
+    color: black; /* Light mode text color */
+    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+body.dark-mode .streaming-button {
+    background-color: #1a1a1a; /* Dark mode background */
+    border-color: white; /* Dark mode border */
+    color: white; /* Dark mode text color */
+}
+
+.streaming-button:hover {
+    background-color: #fcd88c; /* Light mode hover */
+}
+
+body.dark-mode .streaming-button:hover {
+    background-color: #333; /* Dark mode hover */
+}
+
+.streaming-logo {
+    width: 24px; /* Fixed width */
+    height: 24px; /* Fixed height */
+    object-fit: contain; /* Maintain aspect ratio */
 }
 
 /* Socials Page Styles (Socials.html) */
@@ -280,16 +328,12 @@ body.dark-mode #play-pause {
 }
 
 .socials-content h1 a {
-    color: white; /* Force white text */
+    color: inherit; /* Inherit body color */
     text-decoration: none; /* No underline by default */
 }
 
 .socials-content h1 a:hover {
     text-decoration: underline; /* Underline on hover */
-}
-
-body.dark-mode .socials-content h1 a {
-    color: white; /* Ensure white text in dark mode */
 }
 
 /* Footer (All Pages) */
@@ -300,51 +344,36 @@ body.dark-mode .socials-content h1 a {
     right: 0;
     display: flex;
     justify-content: space-between;
-    align-items: center; /* Center items vertically */
+    align-items: center;
     padding: 0 20px;
     font-size: 18px;
     color: inherit; /* Inherit body color */
+    background-color: #fee5a6; /* Light mode background */
+    z-index: 1000; /* Ensure footer is above other content */
+}
+
+body.dark-mode .footer {
+    background-color: #1a1a1a; /* Dark mode background */
+}
+
+.footer-left, .footer-right {
+    flex: 1;
 }
 
 .footer-left {
-    text-align: left; /* Align to the far left */
-    flex: 1;
-}
-
-.footer-left a {
-    color: inherit; /* Inherit body color */
-    text-decoration: none;
-}
-
-.footer-left a:hover {
-    text-decoration: underline;
-}
-
-.footer-center {
-    text-align: center; /* Center the Wearfoi text */
-    flex: 1;
-}
-
-.footer-center a {
-    color: inherit; /* Inherit body color */
-    text-decoration: none;
-}
-
-.footer-center a:hover {
-    text-decoration: underline;
+    text-align: left;
 }
 
 .footer-right {
-    text-align: right; /* Align to the far right */
-    flex: 1;
+    text-align: right;
 }
 
-.footer-right a {
+.footer a {
     color: inherit; /* Inherit body color */
     text-decoration: none;
 }
 
-.footer-right a:hover {
+.footer a:hover {
     text-decoration: underline;
 }
 
@@ -393,13 +422,33 @@ body.dark-mode .socials-content h1 a {
 
     /* Footer Mobile Styles */
     .footer {
-        font-size: 14px;
-        flex-direction: column; /* Stack footer items vertically on mobile */
+        position: static; /* Footer scrolls with the page on mobile */
+        flex-direction: column; /* Stack footer items vertically */
         gap: 10px; /* Add space between items */
         padding: 10px 0; /* Adjust padding */
+        text-align: center; /* Center text */
     }
 
-    .footer-left, .footer-center, .footer-right {
+    .footer-left, .footer-right {
         text-align: center; /* Center text on mobile */
+    }
+
+    /* Snowman Page Mobile Styles */
+    .album-title {
+        font-size: 36px; /* Smaller font size on mobile */
+    }
+
+    .album-cover {
+        max-width: 300px; /* Slightly smaller on mobile */
+    }
+
+    .streaming-button {
+        padding: 8px 16px;
+        font-size: 16px;
+    }
+
+    .streaming-logo {
+        width: 20px; /* Slightly smaller on mobile */
+        height: 20px; /* Slightly smaller on mobile */
     }
 }
