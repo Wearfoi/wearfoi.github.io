@@ -5,126 +5,900 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>47.7 freedomtothesound</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap" rel="stylesheet">
     <style>
-        /* Main container for perfect centering */
+        /* Base styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Libre Baskerville', serif;
+            background: #FEE5A6;
+            color: #333;
+            transition: background-color 0.3s ease;
+        }
+        
+        body.dark-mode {
+            background: #222;
+            color: #eee;
+        }
+        
+        /* Header styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: rgba(254, 229, 166, 0.9);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        body.dark-mode .header {
+            background: rgba(40, 40, 40, 0.9);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            height: 40px;
+            animation: spin 5s linear infinite;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Dark mode toggle style */
+        .dark-mode-toggle {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #333;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 0;
+        }
+        
+        body.dark-mode .dark-mode-toggle {
+            background: #fff;
+        }
+        
+        /* Scrolling text in header */
+        .scrolling-text {
+            flex-grow: 1;
+            margin: 0 20px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .scrolling-text-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: scroll 20s linear infinite;
+        }
+        
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+        }
+        
+        /* Main container */
         .main-container {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: calc(100vh - 160px); /* Account for header/footer */
-            padding: 20px;
+            min-height: 100vh;
+            padding: 80px 10px 60px;
             box-sizing: border-box;
         }
 
         /* Radio container */
         .radio-container {
             width: 100%;
-            max-width: 600px;
+            max-width: 400px;
             margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         
-        /* Embed styling */
-        .radio-embed, .history-embed {
+        /* Cover art styling */
+        .cover-art {
+            display: block;
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 15px;
+            object-fit: cover;
+            border-radius: 4px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+        
+        .cover-art:hover {
+            transform: scale(1.05);
+        }
+        
+        /* Custom player styling */
+        .custom-player {
             width: 100%;
+            background: transparent;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .player-controls {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            width: 100%;
+            position: relative;
+        }
+        
+        /* Play button style */
+        .play-btn {
+            width: 30px;
+            height: 30px;
+            background: transparent;
             border: none;
-            background-color: transparent;
-            margin-bottom: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+            padding: 0;
+            color: #666;
         }
         
-        .radio-embed {
-            height: 150px;
+        .play-btn:hover {
+            transform: scale(1.1);
         }
         
-        .history-embed {
-            min-height: 300px;
+        body.dark-mode .play-btn {
+            color: #aaa;
+        }
+        
+        .player-info {
+            flex-grow: 1;
+            text-align: center;
+            overflow: hidden;
+            padding: 0 10px;
+        }
+        
+        .song-title {
+            font-weight: bold;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .song-artist {
+            font-size: 0.9em;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        body.dark-mode .song-artist {
+            color: #aaa;
+        }
+        
+        .progress-container {
+            width: 100%;
+            height: 5px;
+            background: rgba(0,0,0,0.1);
+            border-radius: 5px;
+            margin-top: 10px;
+            cursor: pointer;
+        }
+        
+        body.dark-mode .progress-container {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: #FFA500;
+            border-radius: 5px;
+            width: 0%;
+            transition: width 0.1s linear;
+        }
+        
+        .time-display {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            font-size: 0.8em;
+            margin-top: 5px;
+            color: #666;
+        }
+        
+        body.dark-mode .time-display {
+            color: #aaa;
+        }
+        
+        /* Volume controls */
+        .volume-control {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        
+        .volume-btn {
+            width: 30px;
+            height: 30px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s;
+            padding: 0;
+            color: #666;
+        }
+        
+        .volume-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        .volume-icon {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+        
+        body.dark-mode .volume-btn {
+            color: #aaa;
+        }
+        
+        .volume-slider-container {
+            position: absolute;
+            left: 50%;
+            bottom: 100%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 100px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 10px;
+            padding: 10px 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+        }
+        
+        body.dark-mode .volume-slider-container {
+            background: rgba(40,40,40,0.9);
+        }
+        
+        .volume-control:hover .volume-slider-container,
+        .volume-slider-container.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .volume-slider {
+            width: 100px;
+            height: 20px;
+            transform: rotate(270deg);
+            position: absolute;
+            top: 40px;
+        }
+        
+        /* History section */
+        .history-container {
+            width: 100%;
+            background: rgba(0,0,0,0.05);
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 10px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        body.dark-mode .history-container {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        .history-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #444;
+        }
+        
+        body.dark-mode .history-title {
+            color: #aaa;
+        }
+        
+        .history-list {
+            max-height: 350px;
+            overflow-y: auto;
+        }
+        
+        .history-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        body.dark-mode .history-item {
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .history-item:last-child {
+            border-bottom: none;
+        }
+        
+        .history-item-art {
+            width: 40px;
+            height: 40px;
+            border-radius: 4px;
+            margin-right: 10px;
+            object-fit: cover;
+        }
+        
+        .history-item-info {
+            flex-grow: 1;
+            overflow: hidden;
+        }
+        
+        .history-item-title {
+            font-weight: bold;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .history-item-artist {
+            font-size: 0.8em;
+            color: #666;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        body.dark-mode .history-item-artist {
+            color: #aaa;
+        }
+        
+        .history-item-time {
+            font-size: 0.8em;
+            color: #888;
+            margin-left: 10px;
+            white-space: nowrap;
+        }
+        
+        /* Footer styles */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(254, 229, 166, 0.9);
+            z-index: 1000;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        body.dark-mode .footer {
+            background: rgba(40, 40, 40, 0.9);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-left, .footer-right {
+            color: #333;
+            text-decoration: none;
+            font-size: 1em;
+        }
+        
+        body.dark-mode .footer-left, 
+        body.dark-mode .footer-right {
+            color: #eee;
+        }
+        
+        .footer a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        /* Scrolling text in footer */
+        .footer-scrolling-text {
+            flex-grow: 1;
+            margin: 0 20px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-align: center;
+        }
+        
+        .footer-scrolling-text-content {
+            display: inline-block;
+            padding-left: 100%;
+            animation: scroll 15s linear infinite;
         }
         
         /* Mobile adjustments */
-        @media (max-width: 600px) {
-            .radio-embed {
-                height: 120px;
+        @media (max-width: 480px) {
+            .cover-art {
+                width: 150px;
+                height: 150px;
             }
-            .history-embed {
-                min-height: 250px;
+            
+            .player-controls {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .play-btn {
+                margin-bottom: 10px;
+            }
+            
+            .volume-slider-container {
+                left: auto;
+                right: 0;
+                transform: none;
+            }
+            
+            .history-container {
+                max-height: 300px;
+            }
+            
+            .history-list {
+                max-height: 250px;
+            }
+            
+            .header, .footer {
+                padding: 10px 15px;
+            }
+            
+            .scrolling-text, .footer-scrolling-text {
+                margin: 0 10px;
+                font-size: 0.9em;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
+    <!-- Header with logo and scrolling song info -->
     <div class="header">
         <a href="index.html">
             <img src="logo.png" alt="Logo" class="logo">
         </a>
-        <a href="about.html" class="about-link">About</a>
-        <a href="socials.html" class="socials-link">Socials</a>
+        <div class="scrolling-text">
+            <div class="scrolling-text-content" id="header-song-info">Loading song information...</div>
+        </div>
         <button id="dark-mode-toggle" class="dark-mode-toggle"></button>
     </div>
 
-    <!-- Main Content - Centered Embeds -->
+    <!-- Main Content -->
     <div class="main-container">
         <div class="radio-container">
-            <!-- Radio Player Embed -->
-            <iframe class="radio-embed" 
-                    id="radio-iframe"
-                    src="https://radio.wearfoi.com/public/47.7_freedomtothesound/embed?theme=light" 
-                    frameborder="0" 
-                    allowtransparency="true"
-                    allow="autoplay">
-            </iframe>
+            <!-- Cover Art -->
+            <img id="cover-art" class="cover-art" src="https://via.placeholder.com/200" alt="Now Playing">
             
-            <!-- History Embed -->
-            <iframe class="history-embed" 
-                    id="history-iframe"
-                    src="https://radio.wearfoi.com/public/47.7_freedomtothesound/history?theme=light" 
-                    frameborder="0" 
-                    allowtransparency="true">
-            </iframe>
+            <!-- Custom Player -->
+            <div class="custom-player">
+                <div class="player-controls">
+                    <button id="play-btn" class="play-btn">
+                        <svg class="volume-icon" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z"/>
+                        </svg>
+                    </button>
+                    <div class="player-info">
+                        <div id="song-title" class="song-title">47.7 freedomtothesound</div>
+                        <div id="song-artist" class="song-artist">Click play to start listening</div>
+                    </div>
+                    <div class="volume-control">
+                        <button id="volume-btn" class="volume-btn">
+                            <svg class="volume-icon" viewBox="0 0 24 24">
+                                <path class="volume-icon-base" d="M3 15V9H7L12 4V20L7 15H3Z"/>
+                                <path class="volume-icon-low" d="M16.5 12C16.5 10.23 15.48 8.71 14 7.97V16.02C15.48 15.29 16.5 13.77 16.5 12Z"/>
+                                <path class="volume-icon-high" d="M14 3.23V5.29C16.89 6.15 19 8.83 19 12C19 15.17 16.89 17.85 14 18.71V20.77C18.01 19.86 21 16.28 21 12C21 7.72 18.01 4.14 14 3.23Z"/>
+                            </svg>
+                        </button>
+                        <div class="volume-slider-container" id="volume-slider-container">
+                            <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.01" value="0.8">
+                        </div>
+                    </div>
+                </div>
+                <div class="progress-container" id="progress-container">
+                    <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="time-display">
+                    <span id="current-time">0:00</span>
+                    <span id="duration">0:00</span>
+                </div>
+            </div>
+            
+            <!-- Custom History Section -->
+            <div class="history-container">
+                <div class="history-title">Recently Played</div>
+                <div class="history-list" id="history-list">
+                    <div class="history-item loading">
+                        <img class="history-item-art" src="https://via.placeholder.com/40" alt="Loading">
+                        <div class="history-item-info">
+                            <div class="history-item-title">Loading history...</div>
+                            <div class="history-item-artist">Please wait</div>
+                        </div>
+                        <div class="history-item-time">--:--</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer with scrolling text -->
     <div class="footer">
         <div class="footer-left"><a href="https://www.instagram.com/freedomtothesound/" target="_blank">℗©freedomtothesound</a></div>
+        <div class="footer-scrolling-text">
+            <div class="footer-scrolling-text-content">47.7 freedomtothesound 24/7 live radio</div>
+        </div>
         <div class="footer-right"><a href="contact.html">Contact</a></div>
     </div>
 
     <script>
-        // Dark Mode Toggle
+        // Player elements
+        const playBtn = document.getElementById('play-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const currentTimeEl = document.getElementById('current-time');
+        const durationEl = document.getElementById('duration');
+        const songTitleEl = document.getElementById('song-title');
+        const songArtistEl = document.getElementById('song-artist');
+        const volumeBtn = document.getElementById('volume-btn');
+        const volumeSlider = document.getElementById('volume-slider');
+        const volumeSliderContainer = document.getElementById('volume-slider-container');
+        const historyList = document.getElementById('history-list');
+        const coverArt = document.getElementById('cover-art');
+        const headerSongInfo = document.getElementById('header-song-info');
         const darkModeToggle = document.getElementById('dark-mode-toggle');
         const body = document.body;
-        const radioIframe = document.getElementById('radio-iframe');
-        const historyIframe = document.getElementById('history-iframe');
         
+        // Audio player with cache busting
+        const audio = new Audio();
+        let isPlaying = false; // Start in paused state
+        let currentSongId = null;
+        let updateInterval;
+        let songStartTime = 0;
+        let songDuration = 0;
+        let lastUpdateTime = 0;
+        let volumeVisible = false;
+        let retryCount = 0;
+        const maxRetries = 5;
+        const maxHistoryItems = 20;
+        let previousVolume = 0.8; // Store previous volume when muting
+        let isMuted = false;
+
         // Initialize dark mode
         function initDarkMode() {
             const isDark = localStorage.getItem('dark-mode') === 'enabled';
             body.classList.toggle('dark-mode', isDark);
-            updateEmbedThemes();
+            darkModeToggle.style.background = isDark ? '#fff' : '#333';
         }
-        
-        // Update embed themes
-        function updateEmbedThemes() {
-            const isDark = body.classList.contains('dark-mode');
-            const theme = isDark ? 'dark' : 'light';
+
+        // Format time (seconds to MM:SS)
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        // Format date/time for history
+        function formatHistoryTime(timestamp) {
+            const date = new Date(timestamp * 1000);
+            return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
+        // Update progress bar based on song position
+        function updateProgress() {
+            const now = Date.now();
+            if (songDuration > 0 && now - lastUpdateTime > 200) {
+                const elapsed = (now - songStartTime) / 1000;
+                const progressPercent = Math.min(100, (elapsed / songDuration) * 100);
+                progressBar.style.width = `${progressPercent}%`;
+                currentTimeEl.textContent = formatTime(elapsed);
+                durationEl.textContent = formatTime(songDuration);
+                lastUpdateTime = now;
+            }
+        }
+
+        // Play/pause toggle
+        function togglePlay() {
+            if (isPlaying) {
+                audio.pause();
+                playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                clearInterval(updateInterval);
+            } else {
+                // Only set audio source when first playing to prevent autoplay
+                if (!audio.src) {
+                    audio.src = 'https://radio.wearfoi.com/radio/8000/radio.mp3?' + Date.now();
+                }
+                audio.play().catch(e => {
+                    console.log('Playback failed:', e);
+                    refreshAudio();
+                });
+                playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                updateInterval = setInterval(updateProgress, 200);
+            }
+            isPlaying = !isPlaying;
+        }
+
+        // Refresh audio source to prevent caching issues
+        function refreshAudio() {
+            audio.src = 'https://radio.wearfoi.com/radio/8000/radio.mp3?' + Date.now();
+            audio.play().then(() => {
+                isPlaying = true;
+                playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                retryCount = 0;
+            }).catch(e => {
+                console.log('Retry failed:', e);
+                if (retryCount < maxRetries) {
+                    retryCount++;
+                    setTimeout(refreshAudio, 2000);
+                } else {
+                    songTitleEl.textContent = 'Connection Error';
+                    songArtistEl.textContent = 'Please refresh page';
+                    headerSongInfo.textContent = 'Connection Error - Please refresh page';
+                    isPlaying = false;
+                    playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                }
+            });
+        }
+
+        // Update volume
+        function updateVolume() {
+            if (!isMuted) {
+                audio.volume = volumeSlider.value;
+            }
             
-            // Update both embeds
-            radioIframe.src = `https://radio.wearfoi.com/public/47.7_freedomtothesound/embed?theme=${theme}`;
-            historyIframe.src = `https://radio.wearfoi.com/public/47.7_freedomtothesound/history?theme=${theme}`;
+            // Update volume icon based on level
+            const iconLow = document.querySelector('.volume-icon-low');
+            const iconHigh = document.querySelector('.volume-icon-high');
+            
+            if (audio.volume === 0 || isMuted) {
+                iconLow.style.display = 'none';
+                iconHigh.style.display = 'none';
+            } else if (audio.volume < 0.5) {
+                iconLow.style.display = '';
+                iconHigh.style.display = 'none';
+            } else {
+                iconLow.style.display = '';
+                iconHigh.style.display = '';
+            }
+        }
+
+        // Toggle mute state
+        function toggleMute() {
+            isMuted = !isMuted;
+            
+            if (isMuted) {
+                previousVolume = audio.volume;
+                audio.volume = 0;
+                volumeSlider.value = 0;
+            } else {
+                audio.volume = previousVolume;
+                volumeSlider.value = previousVolume;
+            }
+            
+            updateVolume();
+        }
+
+        // Toggle volume slider visibility
+        function toggleVolumeSlider() {
+            volumeVisible = !volumeVisible;
+            if (volumeVisible) {
+                volumeSliderContainer.classList.add('visible');
+            } else {
+                volumeSliderContainer.classList.remove('visible');
+            }
+        }
+
+        // Create history item element
+        function createHistoryItem(song) {
+            const item = document.createElement('div');
+            item.className = 'history-item';
+            
+            const art = document.createElement('img');
+            art.className = 'history-item-art';
+            art.src = song.art || 'https://via.placeholder.com/40';
+            art.alt = 'Album Art';
+            art.onerror = () => { 
+                art.src = 'https://via.placeholder.com/40';
+                art.style.display = 'block';
+            };
+            
+            const info = document.createElement('div');
+            info.className = 'history-item-info';
+            
+            const title = document.createElement('div');
+            title.className = 'history-item-title';
+            title.textContent = song.title || 'Unknown Track';
+            
+            const artist = document.createElement('div');
+            artist.className = 'history-item-artist';
+            artist.textContent = song.artist || 'Unknown Artist';
+            
+            const time = document.createElement('div');
+            time.className = 'history-item-time';
+            time.textContent = formatHistoryTime(song.played_at);
+            
+            info.appendChild(title);
+            info.appendChild(artist);
+            
+            item.appendChild(art);
+            item.appendChild(info);
+            item.appendChild(time);
+            
+            return item;
+        }
+
+        // Update history list (newest at top, max 20 items)
+        function updateHistory() {
+            historyList.innerHTML = '';
+            
+            if (historyData.length === 0) {
+                const loadingItem = document.createElement('div');
+                loadingItem.className = 'history-item loading';
+                loadingItem.innerHTML = `
+                    <img class="history-item-art" src="https://via.placeholder.com/40" alt="Loading">
+                    <div class="history-item-info">
+                        <div class="history-item-title">No history available</div>
+                        <div class="history-item-artist">Check back later</div>
+                    </div>
+                    <div class="history-item-time">--:--</div>
+                `;
+                historyList.appendChild(loadingItem);
+                return;
+            }
+            
+            // Add items in chronological order (newest at top)
+            const itemsToShow = historyData.slice(0, maxHistoryItems);
+            itemsToShow.forEach(song => {
+                historyList.appendChild(createHistoryItem(song));
+            });
+        }
+
+        // Fetch now playing data
+        function fetchNowPlaying() {
+            fetch('https://radio.wearfoi.com/api/nowplaying/47.7_freedomtothesound?' + Date.now())
+                .then(response => response.json())
+                .then(data => {
+                    retryCount = 0; // Reset retry count on successful fetch
+                    
+                    if (data.now_playing) {
+                        const nowPlaying = data.now_playing;
+                        const song = nowPlaying.song || {};
+                        const elapsed = nowPlaying.elapsed || 0;
+                        const duration = nowPlaying.duration || 0;
+                        
+                        // Only update if song changed
+                        if (song.id !== currentSongId) {
+                            currentSongId = song.id;
+                            songDuration = duration;
+                            songStartTime = Date.now() - (elapsed * 1000);
+                            
+                            // Update cover art
+                            if (song.art) {
+                                coverArt.src = song.art;
+                                coverArt.style.display = 'block';
+                                coverArt.onerror = () => { 
+                                    coverArt.src = 'https://via.placeholder.com/200';
+                                    coverArt.style.display = 'block';
+                                };
+                            } else {
+                                coverArt.src = 'https://via.placeholder.com/200';
+                                coverArt.style.display = 'block';
+                            }
+                            
+                            // Update song info
+                            const title = song.title || 'Unknown Track';
+                            const artist = song.artist || 'Unknown Artist';
+                            
+                            songTitleEl.textContent = title;
+                            songArtistEl.textContent = artist;
+                            headerSongInfo.textContent = `${title} by ${artist}`;
+                            
+                            // Update page title
+                            document.title = `${artist} - ${title} | 47.7 freedomtothesound`;
+                            
+                            // Start progress updates if playing
+                            if (isPlaying && !updateInterval) {
+                                updateInterval = setInterval(updateProgress, 200);
+                            }
+                        }
+                    }
+
+                    // Update history if available
+                    if (data.song_history) {
+                        historyData = data.song_history.map(item => {
+                            return {
+                                title: item.song ? item.song.title : 'Unknown Track',
+                                artist: item.song ? item.song.artist : 'Unknown Artist',
+                                art: item.song ? item.song.art : 'https://via.placeholder.com/40',
+                                played_at: item.played_at || Math.floor(Date.now() / 1000)
+                            };
+                        });
+                        updateHistory();
+                    }
+                })
+                .catch(error => {
+                    console.log('Error fetching data:', error);
+                    songTitleEl.textContent = 'Updating...';
+                    songArtistEl.textContent = 'Connection in progress';
+                    headerSongInfo.textContent = 'Updating... Connection in progress';
+                    
+                    if (retryCount < maxRetries) {
+                        retryCount++;
+                        setTimeout(fetchNowPlaying, 3000);
+                    } else {
+                        songTitleEl.textContent = 'Connection Error';
+                        songArtistEl.textContent = 'Please refresh page';
+                        headerSongInfo.textContent = 'Connection Error - Please refresh page';
+                    }
+                });
+            
+            // Schedule next update
+            setTimeout(fetchNowPlaying, 3000);
         }
         
         // Toggle dark mode
         darkModeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
-            localStorage.setItem('dark-mode', body.classList.contains('dark-mode') ? 'enabled' : 'disabled');
-            updateEmbedThemes();
+            const isDark = body.classList.contains('dark-mode');
+            darkModeToggle.style.background = isDark ? '#fff' : '#333';
+            localStorage.setItem('dark-mode', isDark ? 'enabled' : 'disabled');
         });
+
+        // Player event listeners
+        playBtn.addEventListener('click', togglePlay);
+        volumeSlider.addEventListener('input', updateVolume);
+        audio.addEventListener('volumechange', updateVolume);
+        volumeBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleMute();
+        });
+        
+        // Hide volume slider when clicking elsewhere
+        document.addEventListener('click', (e) => {
+            if (!volumeSliderContainer.contains(e.target) && e.target !== volumeBtn) {
+                volumeSliderContainer.classList.remove('visible');
+                volumeVisible = false;
+            }
+        });
+
+        // Mobile touch support for volume
+        volumeBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            toggleVolumeSlider();
+        });
+        
+        // Initialize volume
+        audio.volume = 0.8;
+        volumeSlider.value = 0.8;
+        updateVolume();
         
         // Initialize
         initDarkMode();
+        fetchNowPlaying();
     </script>
 </body>
 </html>
