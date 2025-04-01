@@ -274,11 +274,11 @@
             left: 50%;
             bottom: 100%;
             transform: translateX(-50%);
-            width: 20px;
+            width: 40px;
             height: 120px;
             background: rgba(255,255,255,0.9);
             border-radius: 10px;
-            padding: 15px 5px;
+            padding: 15px 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             opacity: 0;
             pointer-events: none;
@@ -286,6 +286,7 @@
             z-index: 10;
             display: flex;
             justify-content: center;
+            align-items: center;
         }
         
         body.dark-mode .volume-slider-container {
@@ -301,11 +302,14 @@
         .volume-slider {
             -webkit-appearance: slider-vertical;
             width: 100px;
-            height: 20px;
-            transform: rotate(270deg);
-            position: absolute;
-            top: 50px;
-            touch-action: none;
+            height: 100%;
+            min-height: 100px;
+            margin: 0;
+            padding: 0;
+            writing-mode: bt-lr; /* IE */
+            -webkit-appearance: slider-vertical; /* Chromium */
+            appearance: slider-vertical;
+            background: transparent;
         }
         
         /* History section */
@@ -463,6 +467,14 @@
                 left: auto;
                 right: 0;
                 transform: none;
+                height: 150px;
+                padding: 15px 8px;
+            }
+            
+            .volume-slider {
+                width: 100%;
+                height: 100%;
+                min-height: 120px;
             }
             
             .history-container {
@@ -523,7 +535,7 @@
                             </svg>
                         </button>
                         <div class="volume-slider-container" id="volume-slider-container">
-                            <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.01" value="0.8">
+                            <input type="range" id="volume-slider" class="volume-slider" min="0" max="1" step="0.01" value="0.8" orient="vertical">
                         </div>
                     </div>
                 </div>
@@ -580,8 +592,12 @@
         const body = document.body;
         
         // Audio player - Initialize with stream URL
-        const audio = new Audio('https://radio.wearfoi.com/radio/8000/radio.mp3');
+        let audio = new Audio('https://radio.wearfoi.com/radio/8000/radio.mp3');
         audio.crossOrigin = "anonymous"; // Important for MediaSession API
+        
+        // Configure audio for better streaming
+        audio.preload = 'none';
+        audio.autoplay = false;
         
         let isPlaying = false;
         let currentSongId = null;
@@ -596,6 +612,9 @@
         let previousVolume = 0.8;
         let isMuted = false;
         let isVolumeDragging = false;
+        let historyData = [];
+        let isFirstPlay = true;
+        let volumeHideTimeout;
 
         // Initialize dark mode
         function initDarkMode() {
@@ -627,47 +646,95 @@
                 currentTimeEl.textContent = formatTime(elapsed);
                 durationEl.textContent = formatTime(songDuration);
                 lastUpdateTime = now;
+                
+                // Update media session position state
+                updateMediaPositionState(elapsed);
             }
         }
 
-        // Play/pause toggle - FIXED: Working implementation
+        // Play/pause toggle - Improved implementation
         function togglePlay() {
             if (isPlaying) {
-                audio.pause();
-                playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-                clearInterval(updateInterval);
-                updateMediaPlaybackState();
+                pauseAudio();
             } else {
-                // Handle mobile browser autoplay restrictions
-                const playPromise = audio.play();
-                
-                if (playPromise !== undefined) {
-                    playPromise.then(() => {
-                        // Audio playback started successfully
-                        isPlaying = true;
-                        playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
-                        updateInterval = setInterval(updateProgress, 200);
-                        updateMediaPlaybackState();
-                    })
-                    .catch(error => {
-                        console.log('Playback failed:', error);
-                        // Show play button since playback failed
-                        isPlaying = false;
-                        playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-                        
-                        // Try refreshing the audio source
-                        if (retryCount < maxRetries) {
-                            retryCount++;
-                            setTimeout(refreshAudio, 1000);
-                        }
-                    });
-                }
+                playAudio();
             }
+        }
+        
+        function playAudio() {
+            // Handle mobile browser autoplay restrictions
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    // Audio playback started successfully
+                    isPlaying = true;
+                    playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                    
+                    if (isFirstPlay) {
+                        isFirstPlay = false;
+                        // First play - fetch now playing immediately
+                        fetchNowPlaying(true);
+                    } else {
+                        // Regular play - just start progress updates
+                        updateInterval = setInterval(updateProgress, 200);
+                    }
+                    
+                    updateMediaPlaybackState();
+                })
+                .catch(error => {
+                    console.log('Playback failed:', error);
+                    // Show play button since playback failed
+                    isPlaying = false;
+                    playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                    
+                    // Try refreshing the audio source
+                    if (retryCount < maxRetries) {
+                        retryCount++;
+                        setTimeout(refreshAudio, 1000);
+                    } else {
+                        showConnectionError();
+                    }
+                });
+            }
+        }
+        
+        function pauseAudio() {
+            audio.pause();
+            isPlaying = false;
+            playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+            clearInterval(updateInterval);
+            updateMediaPlaybackState();
+        }
+        
+        function showConnectionError() {
+            songTitleEl.textContent = 'Connection Error';
+            songArtistEl.textContent = 'Please refresh page';
+            headerSongInfo.textContent = 'Connection Error - Please refresh page';
+            isPlaying = false;
+            playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+            updateMediaPlaybackState();
         }
 
         // Refresh audio source to prevent caching issues
         function refreshAudio() {
-            audio.src = 'https://radio.wearfoi.com/radio/8000/radio.mp3?' + Date.now();
+            // Create a new audio element to ensure clean state
+            const newAudio = new Audio('https://radio.wearfoi.com/radio/8000/radio.mp3?' + Date.now());
+            newAudio.crossOrigin = "anonymous";
+            
+            // Copy properties from old audio
+            newAudio.volume = audio.volume;
+            newAudio.muted = audio.muted;
+            
+            // Replace the old audio element
+            audio.pause();
+            audio.src = '';
+            audio.remove();
+            
+            // Assign new audio to our variable
+            audio = newAudio;
+            
+            // Try playing again
             const playPromise = audio.play();
             
             if (playPromise !== undefined) {
@@ -676,18 +743,18 @@
                     playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
                     retryCount = 0;
                     updateMediaPlaybackState();
+                    
+                    // Start progress updates if we have song data
+                    if (songDuration > 0) {
+                        updateInterval = setInterval(updateProgress, 200);
+                    }
                 }).catch(e => {
                     console.log('Retry failed:', e);
                     if (retryCount < maxRetries) {
                         retryCount++;
                         setTimeout(refreshAudio, 2000);
                     } else {
-                        songTitleEl.textContent = 'Connection Error';
-                        songArtistEl.textContent = 'Please refresh page';
-                        headerSongInfo.textContent = 'Connection Error - Please refresh page';
-                        isPlaying = false;
-                        playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-                        updateMediaPlaybackState();
+                        showConnectionError();
                     }
                 });
             }
@@ -696,7 +763,9 @@
         // Update volume
         function updateVolume() {
             if (!isMuted) {
-                audio.volume = volumeSlider.value;
+                const newVolume = parseFloat(volumeSlider.value);
+                audio.volume = newVolume;
+                previousVolume = newVolume;
             }
             
             // Update volume icon based on level
@@ -720,9 +789,7 @@
             isMuted = !isMuted;
             
             if (isMuted) {
-                previousVolume = audio.volume > 0 ? audio.volume : 0.8;
                 audio.volume = 0;
-                volumeSlider.value = 0;
             } else {
                 audio.volume = previousVolume;
                 volumeSlider.value = previousVolume;
@@ -731,14 +798,98 @@
             updateVolume();
         }
 
-        // Toggle volume slider visibility
-        function toggleVolumeSlider() {
-            volumeVisible = !volumeVisible;
-            if (volumeVisible) {
-                volumeSliderContainer.classList.add('visible');
-            } else {
-                volumeSliderContainer.classList.remove('visible');
-            }
+        // Show volume slider
+        function showVolumeSlider() {
+            clearTimeout(volumeHideTimeout);
+            volumeSliderContainer.classList.add('visible');
+            volumeVisible = true;
+        }
+
+        // Hide volume slider with delay
+        function hideVolumeSlider() {
+            clearTimeout(volumeHideTimeout);
+            volumeHideTimeout = setTimeout(() => {
+                if (!isVolumeDragging) {
+                    volumeSliderContainer.classList.remove('visible');
+                    volumeVisible = false;
+                }
+            }, 1000);
+        }
+
+        // Setup volume controls for mobile and desktop
+        function setupVolumeControls() {
+            // Click/touch handler for volume button
+            volumeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (volumeVisible) {
+                    volumeSliderContainer.classList.remove('visible');
+                    volumeVisible = false;
+                } else {
+                    showVolumeSlider();
+                }
+            });
+            
+            // Touch events for volume slider
+            volumeSlider.addEventListener('touchstart', (e) => {
+                e.stopPropagation();
+                isVolumeDragging = true;
+                showVolumeSlider();
+            });
+            
+            volumeSlider.addEventListener('touchend', () => {
+                isVolumeDragging = false;
+                hideVolumeSlider();
+            });
+            
+            volumeSlider.addEventListener('touchmove', (e) => {
+                e.stopPropagation();
+                showVolumeSlider();
+            });
+            
+            volumeSlider.addEventListener('input', (e) => {
+                updateVolume();
+                showVolumeSlider();
+                e.stopPropagation();
+            });
+            
+            // Mouse events for desktop
+            volumeBtn.addEventListener('mouseenter', () => {
+                showVolumeSlider();
+            });
+            
+            volumeBtn.addEventListener('mouseleave', () => {
+                hideVolumeSlider();
+            });
+            
+            volumeSliderContainer.addEventListener('mouseenter', () => {
+                showVolumeSlider();
+            });
+            
+            volumeSliderContainer.addEventListener('mouseleave', () => {
+                hideVolumeSlider();
+            });
+            
+            // Prevent page scroll when adjusting volume
+            volumeSlider.addEventListener('wheel', (e) => {
+                e.preventDefault();
+                const delta = e.deltaY > 0 ? -0.05 : 0.05;
+                const newVolume = Math.min(1, Math.max(0, parseFloat(volumeSlider.value) + delta));
+                volumeSlider.value = newVolume;
+                updateVolume();
+            }, { passive: false });
+            
+            // Hide volume slider when clicking elsewhere
+            document.addEventListener('click', (e) => {
+                if (!volumeSliderContainer.contains(e.target) && e.target !== volumeBtn) {
+                    volumeSliderContainer.classList.remove('visible');
+                    volumeVisible = false;
+                }
+            });
+            
+            // Initialize volume
+            audio.volume = 0.8;
+            volumeSlider.value = 0.8;
+            updateVolume();
         }
 
         // Create history item element
@@ -846,50 +997,19 @@
                 navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
             }
         }
-
-        // Setup volume controls for mobile
-        function setupVolumeControls() {
-            // Click/touch handler for volume button
-            volumeBtn.addEventListener('click', (e) => {
-                e.stopPropagation();
-                toggleMute();
-            });
-            
-            // Touch events for volume slider
-            volumeSlider.addEventListener('touchstart', (e) => {
-                e.stopPropagation();
-                isVolumeDragging = true;
-                volumeSliderContainer.classList.add('visible');
-                volumeVisible = true;
-            });
-            
-            volumeSlider.addEventListener('touchend', () => {
-                isVolumeDragging = false;
-                setTimeout(() => {
-                    if (!volumeVisible) return;
-                    volumeSliderContainer.classList.remove('visible');
-                    volumeVisible = false;
-                }, 2000);
-            });
-            
-            // Prevent page scroll when adjusting volume
-            document.addEventListener('touchmove', (e) => {
-                if (isVolumeDragging) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
-            
-            // Hide volume slider when tapping elsewhere
-            document.addEventListener('touchstart', (e) => {
-                if (!volumeSliderContainer.contains(e.target) && e.target !== volumeBtn) {
-                    volumeSliderContainer.classList.remove('visible');
-                    volumeVisible = false;
-                }
-            });
+        
+        function updateMediaPositionState(elapsed) {
+            if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession) {
+                navigator.mediaSession.setPositionState({
+                    duration: songDuration,
+                    playbackRate: 1,
+                    position: elapsed
+                });
+            }
         }
 
         // Fetch now playing data
-        function fetchNowPlaying() {
+        function fetchNowPlaying(forceUpdate = false) {
             fetch('https://radio.wearfoi.com/api/nowplaying/47.7_freedomtothesound?' + Date.now())
                 .then(response => response.json())
                 .then(data => {
@@ -901,8 +1021,8 @@
                         const elapsed = nowPlaying.elapsed || 0;
                         const duration = nowPlaying.duration || 0;
                         
-                        // Only update if song changed
-                        if (song.id !== currentSongId) {
+                        // Only update if song changed or forced update
+                        if (song.id !== currentSongId || forceUpdate) {
                             currentSongId = song.id;
                             songDuration = duration;
                             songStartTime = Date.now() - (elapsed * 1000);
@@ -964,9 +1084,7 @@
                         retryCount++;
                         setTimeout(fetchNowPlaying, 3000);
                     } else {
-                        songTitleEl.textContent = 'Connection Error';
-                        songArtistEl.textContent = 'Please refresh page';
-                        headerSongInfo.textContent = 'Connection Error - Please refresh page';
+                        showConnectionError();
                     }
                 });
         }
@@ -992,11 +1110,6 @@
             volumeSlider.addEventListener('input', updateVolume);
             audio.addEventListener('volumechange', updateVolume);
             
-            // Initialize volume
-            audio.volume = 0.8;
-            volumeSlider.value = 0.8;
-            updateVolume();
-            
             // Start with player paused
             isPlaying = false;
             playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
@@ -1009,8 +1122,26 @@
                 if (document.visibilityState === 'visible' && isPlaying) {
                     // Small delay to ensure audio context is resumed
                     setTimeout(() => {
-                        audio.play().catch(e => console.log('Playback resume error:', e));
+                        audio.play().catch(e => {
+                            console.log('Playback resume error:', e);
+                            // If resume fails, try refreshing the audio
+                            if (retryCount < maxRetries) {
+                                retryCount++;
+                                setTimeout(refreshAudio, 1000);
+                            }
+                        });
                     }, 300);
+                }
+            });
+            
+            // Handle audio errors
+            audio.addEventListener('error', (e) => {
+                console.log('Audio error:', e);
+                if (retryCount < maxRetries) {
+                    retryCount++;
+                    setTimeout(refreshAudio, 1000);
+                } else {
+                    showConnectionError();
                 }
             });
             
