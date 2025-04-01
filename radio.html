@@ -109,12 +109,12 @@
         }
 
         .header-scroll {
-            animation: RightToLeft 25s infinite linear;
+            animation: RightToLeft 60s infinite linear;
             padding-left: 50px;
         }
 
         .footer-scroll {
-            animation: LeftToRight 25s infinite linear;
+            animation: LeftToRight 40s infinite linear;
             padding-left: 0;
         }
 
@@ -699,6 +699,44 @@
                 currentTimeEl.textContent = formatTime(elapsed);
                 durationEl.textContent = formatTime(songDuration);
                 lastUpdateTime = now;
+                
+                // Update media session position state
+                if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession) {
+                    navigator.mediaSession.setPositionState({
+                        duration: songDuration,
+                        playbackRate: 1,
+                        position: elapsed
+                    });
+                }
+            }
+        }
+
+        // Media Session API setup
+        function setupMediaSession() {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.setActionHandler('play', () => {
+                    playAudio();
+                });
+                
+                navigator.mediaSession.setActionHandler('pause', () => {
+                    pauseAudio();
+                });
+                
+                navigator.mediaSession.setActionHandler('seekbackward', () => {
+                    // Not applicable for live radio
+                });
+                
+                navigator.mediaSession.setActionHandler('seekforward', () => {
+                    // Not applicable for live radio
+                });
+                
+                navigator.mediaSession.setActionHandler('previoustrack', () => {
+                    // Not applicable for live radio
+                });
+                
+                navigator.mediaSession.setActionHandler('nexttrack', () => {
+                    // Not applicable for live radio
+                });
             }
         }
 
@@ -720,6 +758,11 @@
                     // Audio playback started successfully
                     isPlaying = true;
                     playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                    
+                    // Update media session playback state
+                    if ('mediaSession' in navigator) {
+                        navigator.mediaSession.playbackState = 'playing';
+                    }
                     
                     if (isFirstPlay) {
                         isFirstPlay = false;
@@ -751,6 +794,12 @@
             audio.pause();
             isPlaying = false;
             playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+            
+            // Update media session playback state
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.playbackState = 'paused';
+            }
+            
             clearInterval(updateInterval);
         }
         
@@ -1013,7 +1062,8 @@
         function updateScrollingHeader(title, artist) {
             const text = `${title} by ${artist}`;
             headerScroll.innerHTML = `
-                <p>${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text}</p>
+                <p>${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text}
+                    • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text} • ${text}</p>
             `;
         }
 
@@ -1071,6 +1121,20 @@
                             // Update page title
                             document.title = `${artist} - ${title} | 47.7 freedomtothesound`;
                             
+                            // Update Media Session metadata
+                            if ('mediaSession' in navigator) {
+                                navigator.mediaSession.metadata = new MediaMetadata({
+                                    title: title,
+                                    artist: artist,
+                                    album: album,
+                                    artwork: [
+                                        { src: song.art || 'https://via.placeholder.com/200', sizes: '200x200', type: 'image/jpeg' },
+                                        { src: song.art || 'https://via.placeholder.com/512', sizes: '512x512', type: 'image/jpeg' },
+                                        { src: song.art || 'https://via.placeholder.com/96', sizes: '96x96', type: 'image/jpeg' }
+                                    ]
+                                });
+                            }
+                            
                             // Reset progress if song changed
                             if (forceUpdate) {
                                 progressBar.style.width = '0%';
@@ -1126,6 +1190,7 @@
         function init() {
             initDarkMode();
             setupVolumeControls();
+            setupMediaSession();
             
             // Set up play button event listener
             playBtn.addEventListener('click', togglePlay);
