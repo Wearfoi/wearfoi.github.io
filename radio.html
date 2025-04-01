@@ -6,6 +6,10 @@
     <title>47.7 freedomtothesound</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap" rel="stylesheet">
+    <!-- Mobile-specific meta tags -->
+    <meta name="theme-color" content="#FEE5A6">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <style>
         /* Base styles */
         body {
@@ -230,7 +234,7 @@
             color: #aaa;
         }
         
-        /* Volume controls */
+        /* Volume controls - Mobile improvements */
         .volume-control {
             position: relative;
             display: flex;
@@ -271,10 +275,10 @@
             bottom: 100%;
             transform: translateX(-50%);
             width: 20px;
-            height: 100px;
+            height: 120px;
             background: rgba(255,255,255,0.9);
             border-radius: 10px;
-            padding: 10px 5px;
+            padding: 15px 5px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
             opacity: 0;
             pointer-events: none;
@@ -295,11 +299,13 @@
         }
         
         .volume-slider {
+            -webkit-appearance: slider-vertical;
             width: 100px;
             height: 20px;
             transform: rotate(270deg);
             position: absolute;
-            top: 40px;
+            top: 50px;
+            touch-action: none;
         }
         
         /* History section */
@@ -573,9 +579,11 @@
         const darkModeToggle = document.getElementById('dark-mode-toggle');
         const body = document.body;
         
-        // Audio player with cache busting
-        const audio = new Audio();
-        let isPlaying = false; // Start in paused state
+        // Audio player - Initialize with stream URL
+        const audio = new Audio('https://radio.wearfoi.com/radio/8000/radio.mp3');
+        audio.crossOrigin = "anonymous"; // Important for MediaSession API
+        
+        let isPlaying = false;
         let currentSongId = null;
         let updateInterval;
         let songStartTime = 0;
@@ -585,8 +593,9 @@
         let retryCount = 0;
         const maxRetries = 5;
         const maxHistoryItems = 20;
-        let previousVolume = 0.8; // Store previous volume when muting
+        let previousVolume = 0.8;
         let isMuted = false;
+        let isVolumeDragging = false;
 
         // Initialize dark mode
         function initDarkMode() {
@@ -621,47 +630,67 @@
             }
         }
 
-        // Play/pause toggle
+        // Play/pause toggle - FIXED: Working implementation
         function togglePlay() {
             if (isPlaying) {
                 audio.pause();
                 playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
                 clearInterval(updateInterval);
+                updateMediaPlaybackState();
             } else {
-                // Only set audio source when first playing to prevent autoplay
-                if (!audio.src) {
-                    audio.src = 'https://radio.wearfoi.com/radio/8000/radio.mp3?' + Date.now();
+                // Handle mobile browser autoplay restrictions
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        // Audio playback started successfully
+                        isPlaying = true;
+                        playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                        updateInterval = setInterval(updateProgress, 200);
+                        updateMediaPlaybackState();
+                    })
+                    .catch(error => {
+                        console.log('Playback failed:', error);
+                        // Show play button since playback failed
+                        isPlaying = false;
+                        playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                        
+                        // Try refreshing the audio source
+                        if (retryCount < maxRetries) {
+                            retryCount++;
+                            setTimeout(refreshAudio, 1000);
+                        }
+                    });
                 }
-                audio.play().catch(e => {
-                    console.log('Playback failed:', e);
-                    refreshAudio();
-                });
-                playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
-                updateInterval = setInterval(updateProgress, 200);
             }
-            isPlaying = !isPlaying;
         }
 
         // Refresh audio source to prevent caching issues
         function refreshAudio() {
             audio.src = 'https://radio.wearfoi.com/radio/8000/radio.mp3?' + Date.now();
-            audio.play().then(() => {
-                isPlaying = true;
-                playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
-                retryCount = 0;
-            }).catch(e => {
-                console.log('Retry failed:', e);
-                if (retryCount < maxRetries) {
-                    retryCount++;
-                    setTimeout(refreshAudio, 2000);
-                } else {
-                    songTitleEl.textContent = 'Connection Error';
-                    songArtistEl.textContent = 'Please refresh page';
-                    headerSongInfo.textContent = 'Connection Error - Please refresh page';
-                    isPlaying = false;
-                    playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
-                }
-            });
+            const playPromise = audio.play();
+            
+            if (playPromise !== undefined) {
+                playPromise.then(() => {
+                    isPlaying = true;
+                    playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>';
+                    retryCount = 0;
+                    updateMediaPlaybackState();
+                }).catch(e => {
+                    console.log('Retry failed:', e);
+                    if (retryCount < maxRetries) {
+                        retryCount++;
+                        setTimeout(refreshAudio, 2000);
+                    } else {
+                        songTitleEl.textContent = 'Connection Error';
+                        songArtistEl.textContent = 'Please refresh page';
+                        headerSongInfo.textContent = 'Connection Error - Please refresh page';
+                        isPlaying = false;
+                        playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+                        updateMediaPlaybackState();
+                    }
+                });
+            }
         }
 
         // Update volume
@@ -691,7 +720,7 @@
             isMuted = !isMuted;
             
             if (isMuted) {
-                previousVolume = audio.volume;
+                previousVolume = audio.volume > 0 ? audio.volume : 0.8;
                 audio.volume = 0;
                 volumeSlider.value = 0;
             } else {
@@ -777,6 +806,88 @@
             });
         }
 
+        // Media Session API functions
+        function setupMediaSession() {
+            if ('mediaSession' in navigator) {
+                // Set up media session actions
+                navigator.mediaSession.setActionHandler('play', () => {
+                    if (!isPlaying) togglePlay();
+                });
+                
+                navigator.mediaSession.setActionHandler('pause', () => {
+                    if (isPlaying) togglePlay();
+                });
+                
+                // Prevent default behavior for these actions
+                try {
+                    navigator.mediaSession.setActionHandler('seekbackward', null);
+                    navigator.mediaSession.setActionHandler('seekforward', null);
+                    navigator.mediaSession.setActionHandler('seekto', null);
+                } catch (error) {
+                    console.log('Media Session actions not supported:', error);
+                }
+            }
+        }
+        
+        function updateMediaMetadata() {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.metadata = new MediaMetadata({
+                    title: songTitleEl.textContent,
+                    artist: songArtistEl.textContent,
+                    artwork: [
+                        { src: coverArt.src || 'https://via.placeholder.com/200', sizes: '180x180', type: 'image/jpeg' }
+                    ]
+                });
+            }
+        }
+        
+        function updateMediaPlaybackState() {
+            if ('mediaSession' in navigator) {
+                navigator.mediaSession.playbackState = isPlaying ? 'playing' : 'paused';
+            }
+        }
+
+        // Setup volume controls for mobile
+        function setupVolumeControls() {
+            // Click/touch handler for volume button
+            volumeBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleMute();
+            });
+            
+            // Touch events for volume slider
+            volumeSlider.addEventListener('touchstart', (e) => {
+                e.stopPropagation();
+                isVolumeDragging = true;
+                volumeSliderContainer.classList.add('visible');
+                volumeVisible = true;
+            });
+            
+            volumeSlider.addEventListener('touchend', () => {
+                isVolumeDragging = false;
+                setTimeout(() => {
+                    if (!volumeVisible) return;
+                    volumeSliderContainer.classList.remove('visible');
+                    volumeVisible = false;
+                }, 2000);
+            });
+            
+            // Prevent page scroll when adjusting volume
+            document.addEventListener('touchmove', (e) => {
+                if (isVolumeDragging) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+            
+            // Hide volume slider when tapping elsewhere
+            document.addEventListener('touchstart', (e) => {
+                if (!volumeSliderContainer.contains(e.target) && e.target !== volumeBtn) {
+                    volumeSliderContainer.classList.remove('visible');
+                    volumeVisible = false;
+                }
+            });
+        }
+
         // Fetch now playing data
         function fetchNowPlaying() {
             fetch('https://radio.wearfoi.com/api/nowplaying/47.7_freedomtothesound?' + Date.now())
@@ -820,6 +931,9 @@
                             // Update page title
                             document.title = `${artist} - ${title} | 47.7 freedomtothesound`;
                             
+                            // Update media session metadata
+                            updateMediaMetadata();
+                            
                             // Start progress updates if playing
                             if (isPlaying && !updateInterval) {
                                 updateInterval = setInterval(updateProgress, 200);
@@ -855,11 +969,8 @@
                         headerSongInfo.textContent = 'Connection Error - Please refresh page';
                     }
                 });
-            
-            // Schedule next update
-            setTimeout(fetchNowPlaying, 3000);
         }
-        
+
         // Toggle dark mode
         darkModeToggle.addEventListener('click', () => {
             body.classList.toggle('dark-mode');
@@ -868,37 +979,47 @@
             localStorage.setItem('dark-mode', isDark ? 'enabled' : 'disabled');
         });
 
-        // Player event listeners
-        playBtn.addEventListener('click', togglePlay);
-        volumeSlider.addEventListener('input', updateVolume);
-        audio.addEventListener('volumechange', updateVolume);
-        volumeBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            toggleMute();
-        });
-        
-        // Hide volume slider when clicking elsewhere
-        document.addEventListener('click', (e) => {
-            if (!volumeSliderContainer.contains(e.target) && e.target !== volumeBtn) {
-                volumeSliderContainer.classList.remove('visible');
-                volumeVisible = false;
-            }
-        });
+        // Initialize everything
+        function init() {
+            initDarkMode();
+            setupVolumeControls();
+            setupMediaSession();
+            
+            // Set up play button event listener
+            playBtn.addEventListener('click', togglePlay);
+            
+            // Set up volume slider
+            volumeSlider.addEventListener('input', updateVolume);
+            audio.addEventListener('volumechange', updateVolume);
+            
+            // Initialize volume
+            audio.volume = 0.8;
+            volumeSlider.value = 0.8;
+            updateVolume();
+            
+            // Start with player paused
+            isPlaying = false;
+            playBtn.innerHTML = '<svg class="volume-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>';
+            
+            // Start fetching now playing data
+            fetchNowPlaying();
+            
+            // Handle mobile browser tab switching
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState === 'visible' && isPlaying) {
+                    // Small delay to ensure audio context is resumed
+                    setTimeout(() => {
+                        audio.play().catch(e => console.log('Playback resume error:', e));
+                    }, 300);
+                }
+            });
+            
+            // Schedule regular now playing updates
+            setInterval(fetchNowPlaying, 3000);
+        }
 
-        // Mobile touch support for volume
-        volumeBtn.addEventListener('touchstart', (e) => {
-            e.preventDefault();
-            toggleVolumeSlider();
-        });
-        
-        // Initialize volume
-        audio.volume = 0.8;
-        volumeSlider.value = 0.8;
-        updateVolume();
-        
-        // Initialize
-        initDarkMode();
-        fetchNowPlaying();
+        // Start the app
+        init();
     </script>
 </body>
 </html>
