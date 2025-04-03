@@ -100,7 +100,6 @@
 
         .scrolling-text p {
             font-size: 1em;
-            color: inherit;
             font-weight: bold;
             margin: 0;
             line-height: 40px;
@@ -111,6 +110,14 @@
         .header-scroll {
             animation: RightToLeft 60s infinite linear;
             padding-left: 50px;
+        }
+
+        .header-scroll p {
+            color: #000000; /* Orange color for scrolling header text */
+        }
+
+        body.dark-mode .header-scroll p {
+            color: #ffffff; /* Keep orange in dark mode */
         }
 
         .footer-scroll {
@@ -230,6 +237,7 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            color: inherit; /* Keep default color (white in dark mode) */
         }
         
         .song-artist {
@@ -261,6 +269,8 @@
             border-radius: 5px;
             margin-top: 10px;
             cursor: pointer;
+            position: relative;
+            overflow: hidden;
         }
         
         body.dark-mode .progress-container {
@@ -272,7 +282,10 @@
             background: #FFA500;
             border-radius: 5px;
             width: 0%;
-            transition: width 0.1s linear;
+            transition: width 0.05s linear;
+            position: absolute;
+            top: 0;
+            left: 0;
         }
         
         .time-display {
@@ -655,6 +668,7 @@
         let lastSongUpdate = 0;
         let audioRefreshInterval;
         let audioBuffer = null;
+        let animationFrameId = null;
 
         // Initialize dark mode
         function initDarkMode() {
@@ -689,26 +703,32 @@
             }
         }
 
-        // Update progress bar based on song position
+        // Smooth progress bar update using requestAnimationFrame
         function updateProgress() {
-            const now = Date.now();
-            if (songDuration > 0 && now - lastUpdateTime > 200) {
-                const elapsed = (now - songStartTime) / 1000;
-                const progressPercent = Math.min(100, (elapsed / songDuration) * 100);
-                progressBar.style.width = `${progressPercent}%`;
-                currentTimeEl.textContent = formatTime(elapsed);
-                durationEl.textContent = formatTime(songDuration);
-                lastUpdateTime = now;
-                
-                // Update media session position state
-                if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession) {
-                    navigator.mediaSession.setPositionState({
-                        duration: songDuration,
-                        playbackRate: 1,
-                        position: elapsed
-                    });
-                }
+            if (!isPlaying || songDuration <= 0) {
+                cancelAnimationFrame(animationFrameId);
+                return;
             }
+            
+            const now = Date.now();
+            const elapsed = (now - songStartTime) / 1000;
+            const progressPercent = Math.min(100, (elapsed / songDuration) * 100);
+            
+            progressBar.style.width = `${progressPercent}%`;
+            currentTimeEl.textContent = formatTime(elapsed);
+            durationEl.textContent = formatTime(songDuration);
+            lastUpdateTime = now;
+            
+            // Update media session position state
+            if ('mediaSession' in navigator && 'setPositionState' in navigator.mediaSession) {
+                navigator.mediaSession.setPositionState({
+                    duration: songDuration,
+                    playbackRate: 1,
+                    position: elapsed
+                });
+            }
+            
+            animationFrameId = requestAnimationFrame(updateProgress);
         }
 
         // Media Session API setup
@@ -769,8 +789,9 @@
                         // First play - fetch now playing immediately
                         fetchNowPlaying(true);
                     } else {
-                        // Regular play - just start progress updates
-                        updateInterval = setInterval(updateProgress, 200);
+                        // Regular play - start smooth progress updates
+                        cancelAnimationFrame(animationFrameId);
+                        updateProgress();
                     }
                 })
                 .catch(error => {
@@ -800,7 +821,7 @@
                 navigator.mediaSession.playbackState = 'paused';
             }
             
-            clearInterval(updateInterval);
+            cancelAnimationFrame(animationFrameId);
         }
         
         function showConnectionError() {
@@ -1143,8 +1164,9 @@
                             }
                             
                             // Start progress updates if playing
-                            if (isPlaying && !updateInterval) {
-                                updateInterval = setInterval(updateProgress, 200);
+                            if (isPlaying) {
+                                cancelAnimationFrame(animationFrameId);
+                                updateProgress();
                             }
                         }
                     }
