@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>47.7 freedomtothesound</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville&display=swap" rel="stylesheet">
+    
     <!-- Mobile-specific meta tags -->
     <meta name="theme-color" content="#FEE5A6">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,15 +15,15 @@
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Libre Baskerville', serif;
-            background: #FEE5A6;
-            color: #333;
+            font-family: "Trebuchet MS", Trebuchet, sans-serif;
+            background: #ffffff;
+            color: #d52b1e;
             transition: background-color 0.3s ease;
         }
         
         body.dark-mode {
-            background: #222;
-            color: #eee;
+            background: #000000;
+            color: #d52b1e;
         }
         
         /* Header styles */
@@ -36,16 +36,16 @@
             top: 0;
             left: 0;
             right: 0;
-            background: rgba(254, 229, 166, 0.9);
+            background:#ffffff;
             z-index: 1000;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             height: 40px;
             overflow: hidden;
         }
         
         body.dark-mode .header {
-            background: rgba(40, 40, 40, 0.9);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            background: #000000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
         }
         
         .logo {
@@ -113,11 +113,11 @@
         }
 
         .header-scroll p {
-            color: #000000; /* Orange color for scrolling header text */
+            color: #d52b1e; /* Orange color for scrolling header text */
         }
 
         body.dark-mode .header-scroll p {
-            color: #ffffff; /* Keep orange in dark mode */
+            color: #d52b1e; /* Keep orange in dark mode */
         }
 
         .footer-scroll {
@@ -242,7 +242,7 @@
         
         .song-artist {
             font-size: 0.9em;
-            color: #666;
+            color: #18ff00;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -250,7 +250,7 @@
         
         .song-album {
             font-size: 0.8em;
-            color: #888;
+            color: #18ff00;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -259,7 +259,7 @@
         
         body.dark-mode .song-artist,
         body.dark-mode .song-album {
-            color: #aaa;
+            color: #18ff00;
         }
         
         .progress-container {
@@ -279,7 +279,7 @@
         
         .progress-bar {
             height: 100%;
-            background: #FFA500;
+            background: #18ff00;
             border-radius: 5px;
             width: 0%;
             transition: width 0.05s linear;
@@ -446,7 +446,7 @@
         
         .history-item-artist {
             font-size: 0.8em;
-            color: #666;
+            color: #18ff00;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -454,7 +454,7 @@
         
         .history-item-album {
             font-size: 0.8em;
-            color: #888;
+            color: #18ff00;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -463,7 +463,7 @@
         
         body.dark-mode .history-item-artist,
         body.dark-mode .history-item-album {
-            color: #aaa;
+            color: #18ff00;
         }
         
         .history-item-time {
@@ -483,15 +483,15 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: rgba(254, 229, 166, 0.9);
+            background: #ffffff;
             z-index: 1000;
-            border-top: 1px solid rgba(0, 0, 0, 0.1);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             height: 40px;
             overflow: hidden;
         }
         
         body.dark-mode .footer {
-            background: rgba(40, 40, 40, 0.9);
+            background: #000000;
             border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
         
@@ -541,6 +541,7 @@
                 padding-left: 40px;
             }
         }
+
     </style>
 </head>
 <body>

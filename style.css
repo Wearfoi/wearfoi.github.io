@@ -11,17 +11,17 @@ body {
     align-items: center;
     justify-content: center; /* Center content vertically */
     min-height: 100vh; /* Ensure body takes at least the full viewport height */
-    font-family: 'Libre Baskerville', serif;
-    background-color: #fee5a6;
-    color: black; /* Default text color */
+    font-family: "Trebuchet MS", Trebuchet, sans-serif;
+    background-color: #ffffff;
+    color: #d52b1e; /* Default text color */
     position: relative;
     transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
 }
 
 /* Dark Mode Styles */
 body.dark-mode {
-    background-color: #1a1a1a; /* Dark background */
-    color: white; /* Light text */
+    background-color: #000000; /* Dark background */
+    color: #d52b1e; /* Light text */
 }
 
 /* Dark Mode Toggle Button */
@@ -81,6 +81,16 @@ body.dark-mode .dark-mode-toggle {
     text-decoration: underline; /* Underline on hover */
 }
 
+.radio-link {
+    font-size: 18px;
+    color: inherit; /* Inherit body color */
+    text-decoration: none; /* No underline by default */
+}
+
+.radio-link:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
 /* Image Container (Index.html) */
 .image-container {
     cursor: pointer;
@@ -131,8 +141,8 @@ button:not(.dark-mode-toggle) {
     padding: 15px 30px;
     font-size: 24px;
     font-weight: bold;
-    color: black; /* Black text in light mode */
-    background-color: #fee5a6; /* Light mode background */
+    color: #d52b1e; /* Black text in light mode */
+    background-color: #ffffff; /* Light mode background */
     border: 2px solid black; /* Black border in light mode */
     border-radius: 25px;
     cursor: pointer;
@@ -141,17 +151,17 @@ button:not(.dark-mode-toggle) {
 }
 
 body.dark-mode button:not(.dark-mode-toggle) {
-    color: white; /* White text in dark mode */
-    background-color: #1a1a1a; /* Dark mode background */
+    color: #d52b1e; /* White text in dark mode */
+    background-color: #000000; /* Dark mode background */
     border-color: white; /* White border in dark mode */
 }
 
 button:not(.dark-mode-toggle):hover {
-    background-color: #fcd88c; /* Light mode hover */
+    background-color: #ffffff; /* Light mode hover */
 }
 
 body.dark-mode button:not(.dark-mode-toggle):hover {
-    background-color: #333; /* Dark mode hover */
+    background-color: #000000; /* Dark mode hover */
 }
 
 /* Audio Player Styles (Audio-player.html) */
@@ -170,16 +180,16 @@ body.dark-mode button:not(.dark-mode-toggle):hover {
 
 /* Play/Pause Button (Audio-player.html) */
 #play-pause {
-    background-color: #fee5a6; /* Light mode background */
+    background-color: #ffffff; /* Light mode background */
     border: 2px solid black; /* Black border in light mode */
-    color: black; /* Black text in light mode */
+    color: #d52b1e; /* Black text in light mode */
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 body.dark-mode #play-pause {
-    background-color: #1a1a1a; /* Dark mode background */
-    border-color: white; /* White border in dark mode */
-    color: white; /* White text in dark mode */
+    background-color: #000000; /* Dark mode background */
+    border-color: #d52b1e; /* White border in dark mode */
+    color: #d52b1e; /* White text in dark mode */
 }
 
 /* Progress Bar (Audio-player.html) */
@@ -293,26 +303,26 @@ body.dark-mode #play-pause {
     align-items: center;
     gap: 7px;
     padding: 10px 20px;
-    background-color: #fee5a6; /* Light mode background */
-    border: 2px solid black; /* Light mode border */
+    background-color: #ffffff; /* Light mode background */
+    border: 2px solid #d52b1e; /* Light mode border */
     border-radius: 25px;
     text-decoration: none;
-    color: black; /* Light mode text color */
+    color: #d52b1e; /* Light mode text color */
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
 body.dark-mode .streaming-button {
-    background-color: #1a1a1a; /* Dark mode background */
-    border-color: white; /* Dark mode border */
-    color: white; /* Dark mode text color */
+    background-color: #000000; /* Dark mode background */
+    border-color: #d52b1e; /* Dark mode border */
+    color: #d52b1e; /* Dark mode text color */
 }
 
 .streaming-button:hover {
-    background-color: #fcd88c; /* Light mode hover */
+    background-color: #ffffff; /* Light mode hover */
 }
 
 body.dark-mode .streaming-button:hover {
-    background-color: #333; /* Dark mode hover */
+    background-color: #000000; /* Dark mode hover */
 }
 
 .streaming-logo {
@@ -353,12 +363,12 @@ body.dark-mode .streaming-button:hover {
     padding: 10px 20px;
     font-size: 18px;
     color: inherit; /* Inherit body color */
-    background-color: #fee5a6; /* Light mode background */
+    background-color: #ffffff; /* Light mode background */
     z-index: 1000; /* Ensure footer is above other content */
 }
 
 body.dark-mode .footer {
-    background-color: #1a1a1a; /* Dark mode background */
+    background-color: #000000; /* Dark mode background */
 }
 
 .footer-left, .footer-right {
@@ -397,13 +407,13 @@ body.dark-mode .footer {
         top: 0;
         left: 0;
         right: 0;
-        background-color: #fee5a6; /* Light mode background */
+        background-color: #ffffff; /* Light mode background */
         padding: 10px 20px;
         z-index: 1000;
     }
 
     body.dark-mode .header {
-        background-color: #1a1a1a; /* Dark mode background */
+        background-color: #000000; /* Dark mode background */
     }
 
     /* Adjust the countdown timer for mobile */
@@ -437,12 +447,13 @@ body.dark-mode .footer {
         bottom: 0;
         left: 0;
         right: 0;
-        background-color: #fee5a6; /* Light mode background */
+        background-color: #ffffff; /* Light mode background */
         padding: 10px 20px;
         z-index: 1000;
     }
 
     body.dark-mode .footer {
-        background-color: #1a1a1a; /* Dark mode background */
+        background-color: #000000; /* Dark mode background */
     }
 }
+
