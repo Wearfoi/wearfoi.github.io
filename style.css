@@ -32,7 +32,7 @@ body.dark-mode {
     width: 40px;
     height: 40px;
     border-radius: 50%; /* Circular button */
-    background-color: white; /* White button */
+    background-color: rgb(0, 0, 0); /* White button */
     border: none;
     cursor: pointer;
     z-index: 1000;
@@ -40,7 +40,7 @@ body.dark-mode {
 }
 
 body.dark-mode .dark-mode-toggle {
-    background-color: black; /* Black button in dark mode */
+    background-color: rgb(255, 255, 255); /* Black button in dark mode */
 }
 
 /* Logo Spin Animation */
@@ -71,6 +71,21 @@ body.dark-mode .dark-mode-toggle {
     z-index: 1000;
 }
 
+/* Example selector - replace '.header-text' with your actual class/ID */
+.header-text {
+  position: absolute;
+  left: 50%;
+  top: 0%;
+  transform: translateX(-50%);
+  margin: 0; /* Remove any default margins */
+  padding-top: 48px; /* Adjust this for spacing from the top */
+}
+.header-text a {
+    color: inherit; /* Inherit body color */
+    text-decoration: none; /* No underline by default */
+    font-size: 20px;
+    margin: 0 10px; /* Spacing between links */
+}
 .about-link, .socials-link, .blog-link {
     font-size: 18px;
     color: inherit; /* Inherit body color */
@@ -157,118 +172,37 @@ body.dark-mode button:not(.dark-mode-toggle) {
 }
 
 button:not(.dark-mode-toggle):hover {
-    background-color: #ffffff; /* Light mode hover */
+    background-color: #000000; /* Light mode hover */
 }
 
 body.dark-mode button:not(.dark-mode-toggle):hover {
-    background-color: #000000; /* Dark mode hover */
+    background-color: #ffffff; /* Dark mode hover */
 }
 
-/* Audio Player Styles (Audio-player.html) */
-.audio-player {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 15px;
-    width: 90%;
-    max-width: 400px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: transparent; /* Transparent background */
-    border-radius: 15px;
-}
-
-/* Play/Pause Button (Audio-player.html) */
-#play-pause {
-    background-color: #ffffff; /* Light mode background */
-    border: 2px solid black; /* Black border in light mode */
-    color: #d52b1e; /* Black text in light mode */
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
-body.dark-mode #play-pause {
-    background-color: #000000; /* Dark mode background */
-    border-color: #d52b1e; /* White border in dark mode */
-    color: #d52b1e; /* White text in dark mode */
-}
-
-/* Progress Bar (Audio-player.html) */
-.progress-container {
-    width: 100%;
-    position: relative;
-}
-
-.progress-bar {
-    width: 100%;
-    height: 5px;
-    background-color: rgba(255, 255, 255, 0.5); /* Semi-transparent white */
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-.progress {
-    height: 100%;
-    background-color: white; /* White progress */
-    border-radius: 5px;
-    width: 0%;
-}
-
-/* Time Display (Audio-player.html) */
-.time-display {
-    font-size: 16px; /* Increased font size */
-    color: inherit; /* Inherit body color */
-    margin-top: 5px;
-    text-align: center; /* Center text */
-}
 
 /* About Page Styles (About.html) */
 .about-content {
     text-align: center;
-    margin-top: 100px;
+    margin-top: 0px;
 }
 
 .about-content h1 {
-    font-size: 48px;
-    color: inherit; /* Inherit body color */
+    font-size: 47px;
+    color: #18ff00; /* Inherit body color */
 }
 
 /* Contact Page Styles (Contact.html) */
 .contact-content {
     text-align: center;
-    margin-top: 100px;
+    margin-top: 0px;
 }
 
 .contact-content h1 {
     font-size: 36px; /* Smaller font size */
-    color: inherit; /* Inherit body color */
+    color: #18ff00; /* Inherit body color */
 }
 
-/* Blog Page Styles (blog.html) */
-.blog-content {
-    text-align: center;
-    margin-top: 100px;
-}
 
-.blog-content h1 {
-    font-size: 48px;
-    color: inherit; /* Inherit body color */
-}
-
-.blog-content h1 a {
-    color: inherit; /* Inherit body color */
-    text-decoration: none; /* No underline by default */
-}
-
-.blog-content h1 a:hover {
-    text-decoration: underline; /* Underline on hover */
-}
-
-/* Blog #1 Page Styles (blog1.html) */
-.editable-text {
-    font-size: 48px; /* Same size as the previous "Blog" heading */
-    color: inherit; /* Inherit body color */
-    margin-top: 20px;
-}
 
 /* Snowman Page Styles (snowman.html) */
 .album-landing-content {
@@ -334,12 +268,12 @@ body.dark-mode .streaming-button:hover {
 /* Socials Page Styles (Socials.html) */
 .socials-content {
     text-align: center;
-    margin-top: 100px;
+    margin-top: 0px;
 }
 
 .socials-content h1 {
-    font-size: 48px;
-    color: inherit; /* Inherit body color */
+    font-size: 47px;
+    color: #18ff00; /* Inherit body color */
 }
 
 .socials-content h1 a {
