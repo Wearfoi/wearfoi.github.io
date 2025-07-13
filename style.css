@@ -20,10 +20,27 @@ body {
 
 /* Dark Mode Styles */
 body.dark-mode {
-    background-color: #000000; /* Dark background */
-    color: #d52b1e; /* Light text */
+    background-color: #000000;
+    color: #d52b1e;
 }
 
+body.dark-mode .header {
+    background-color: #000000;
+}
+
+body.dark-mode .dark-mode-toggle {
+    background-color: #ffffff;
+}
+
+body.dark-mode .streaming-button {
+    background-color: #000000;
+    border-color: #d52b1e;
+    color: #d52b1e;
+}
+
+body.dark-mode .footer {
+    background-color: #000000;
+}
 /* Dark Mode Toggle Button */
 .dark-mode-toggle {
     position: fixed;
@@ -69,11 +86,11 @@ body.dark-mode .dark-mode-toggle {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 15px 20px;
+    padding: 12px 20px;
     background-color: #ffffff;
     z-index: 1000;
-    height: 74px;
     box-sizing: border-box;
+    height: 60px; /* Fixed height */
 }
 
 body.dark-mode .header {
@@ -81,29 +98,47 @@ body.dark-mode .header {
 }
 
 /* Logo */
+.logo-container {
+    flex: 1;
+    display: flex;
+    z-index: 1002; /* Ensure logo is above other content */
+    justify-content: flex-start;
+    align-items: center;
+}
+
 .logo {
-    width: 47px;
-    height: 47px;
+    width: 40px;
+    height: 40px;
     animation: spin 5s linear infinite;
 }
 
-/* Navigation Links */
+/* Navigation Links - Centered */
 .header-text {
+    flex: 2;
     display: flex;
+    justify-content: center;
     gap: 20px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
 .header-text a {
     color: inherit;
     text-decoration: none;
-    font-size: 20px;
+    font-size: 18px;
     white-space: nowrap;
+    display: flex;
+    align-items: center;
+    height: 100%;
 }
 
-/* Dark Mode Toggle */
+/* Dark Mode Toggle - Right-aligned */
+.dark-mode-container {
+    flex: 1;
+    display: flex;
+    z-index: 1002; /* Ensure toggle is above other content */
+    justify-content: flex-end;
+    align-items: center;
+}
+
 .dark-mode-toggle {
     width: 30px;
     height: 30px;
@@ -111,6 +146,8 @@ body.dark-mode .header {
     background-color: #000000;
     border: none;
     cursor: pointer;
+    z-index: 1003; /* Highest priority */
+    transition: all 0.3s ease;
 }
 
 body.dark-mode .dark-mode-toggle {
@@ -120,21 +157,21 @@ body.dark-mode .dark-mode-toggle {
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .header {
-        padding: 10px 15px;
-        height: 64px;
+        padding: 8px 15px;
+        height: 50px;
     }
     
     .logo {
-        width: 40px;
-        height: 40px;
+        width: 30px;
+        height: 30px;
     }
     
     .header-text {
-        gap: 10px;
+        gap: 12px;
     }
     
     .header-text a {
-        font-size: 20px;
+        font-size: 16px;
     }
     
     .dark-mode-toggle {
@@ -149,7 +186,7 @@ body.dark-mode .dark-mode-toggle {
     }
     
     .header-text a {
-        font-size: 20px;
+        font-size: 14px;
     }
 }
 

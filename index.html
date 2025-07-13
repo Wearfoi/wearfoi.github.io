@@ -62,9 +62,11 @@
 </head>
 <body>
    <div class="header">
-    <a href="index.html">
-        <img src="logo.png" alt="Logo" class="logo">
-    </a>
+    <div class="logo-container">
+        <a href="index.html">
+            <img src="logo.png" alt="Logo" class="logo">
+        </a>
+    </div>
     
     <div class="header-text">
         <a href="radio.html" class="radio-link">Radio</a>
@@ -72,8 +74,11 @@
         <a href="socials.html" class="socials-link">Socials</a>
     </div>
     
-    <button id="dark-mode-toggle" class="dark-mode-toggle"></button>
+    <div class="dark-mode-container">
+        <button id="dark-mode-toggle" class="dark-mode-toggle"></button>
+    </div>
 </div>
+    
     <!-- COUNTDOWN SECTION - ADDED CONTENT -->
     <div class="countdown-container">
         <div id="countdown-timer" class="countdown-timer">00:00:00:00</div>
@@ -90,53 +95,55 @@
     </div>
 
     <script>
-        // Dark Mode Toggle
-        const darkModeToggle = document.getElementById('dark-mode-toggle');
-        const body = document.body;
-        const snowmanImage = document.getElementById('snowman-image'); // Only for index.html
+// Dark Mode Toggle
+const darkModeToggle = document.getElementById('dark-mode-toggle');
+const body = document.body;
+const snowmanImage = document.getElementById('snowman-image'); // Only for index.html
 
-        // Check localStorage for dark mode preference
-        if (localStorage.getItem('dark-mode') === 'enabled') {
-            body.classList.add('dark-mode');
-            if (snowmanImage) {
-                snowmanImage.src = 'snowman-announcement-inverted.jpg'; // Set inverted image
-            }
+// Check localStorage for dark mode preference
+if (localStorage.getItem('dark-mode') === 'enabled') {
+    body.classList.add('dark-mode');
+    if (snowmanImage) {
+        snowmanImage.src = 'snowman-announcement-inverted.jpg';
+    }
+}
+
+darkModeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-mode'); // Toggle dark mode class
+
+    // Switch image source based on dark mode state (only for index.html)
+    if (snowmanImage) {
+        if (body.classList.contains('dark-mode')) {
+            snowmanImage.src = 'snowman-announcement-inverted.jpg';
+        } else {
+            snowmanImage.src = 'snowman-announcement.jpg';
         }
+    }
 
-        darkModeToggle.addEventListener('click', () => {
-            body.classList.toggle('dark-mode'); // Toggle dark mode class
+    // Save preference to localStorage
+    if (body.classList.contains('dark-mode')) {
+        localStorage.setItem('dark-mode', 'enabled');
+    } else {
+        localStorage.setItem('dark-mode', 'disabled');
+    }
+});
 
-            // Switch image source based on dark mode state (only for index.html)
-            if (snowmanImage) {
-                if (body.classList.contains('dark-mode')) {
-                    snowmanImage.src = 'snowman-announcement-inverted.jpg'; // Inverted image
-                } else {
-                    snowmanImage.src = 'snowman-announcement.jpg'; // Original image
-                }
-            }
+// Apply dark mode to all pages on load
+window.addEventListener('load', () => {
+    if (localStorage.getItem('dark-mode') === 'enabled') {
+        body.classList.add('dark-mode');
+        if (snowmanImage) {
+            snowmanImage.src = 'snowman-announcement-inverted.jpg';
+        }
+    } else {
+        body.classList.remove('dark-mode');
+        if (snowmanImage) {
+            snowmanImage.src = 'snowman-announcement.jpg';
+        }
+    }
+});
 
-            // Save preference to localStorage
-            if (body.classList.contains('dark-mode')) {
-                localStorage.setItem('dark-mode', 'enabled');
-            } else {
-                localStorage.setItem('dark-mode', 'disabled');
-            }
-        });
-
-        // Apply dark mode to all pages on load
-        window.addEventListener('load', () => {
-            if (localStorage.getItem('dark-mode') === 'enabled') {
-                body.classList.add('dark-mode');
-                if (snowmanImage) {
-                    snowmanImage.src = 'snowman-announcement-inverted.jpg'; // Set inverted image
-                }
-            } else {
-                body.classList.remove('dark-mode');
-                if (snowmanImage) {
-                    snowmanImage.src = 'snowman-announcement.jpg'; // Set original image
-                }
-            }
-        });
+        
 
         // COUNTDOWN FUNCTIONALITY - ADDED CONTENT
         const targetDate = new Date('2025-07-16T19:47:00-04:00'); // 7:47 PM EST in EDT (UTC-4)
