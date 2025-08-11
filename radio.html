@@ -19,7 +19,29 @@
             background: #ffffff;
             color: #d52b1e;
             transition: background-color 0.3s ease;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
+
+          /* Add these styles for drawing mode */
+    body.no-selection * {
+        -webkit-user-select: none !important;
+        -moz-user-select: none !important;
+        -ms-user-select: none !important;
+        user-select: none !important;
+        cursor: default !important;
+    }
+    
+    /* Allow selection for specific elements that need it */
+    .song-title, .song-artist, .song-album,
+    .history-item-title, .history-item-artist, .history-item-album {
+        -webkit-user-select: text;
+        -moz-user-select: text;
+        -ms-user-select: text;
+        user-select: text;
+    }
         
         body.dark-mode {
             background: #000000;
@@ -1275,5 +1297,8 @@
         // Start the app
         init();
     </script>
+
+<script src="drawing.js"></script>
+
 </body>
 </html>

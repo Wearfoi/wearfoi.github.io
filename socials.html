@@ -16,6 +16,11 @@
             <img src="logo.png" alt="Logo" class="logo">
         </a>
     </div>
+    <div class="logo-container logo-container-right">
+    <a href="index.html">
+        <img src="logo.png" alt="Logo" class="logo">
+    </a>
+</div>
     
     <div class="header-text">
         <a href="radio.html" class="radio-link">Radio</a>
@@ -23,9 +28,7 @@
         <a href="socials.html" class="socials-link">Socials</a>
     </div>
     
-    <div class="dark-mode-container">
-        <button id="dark-mode-toggle" class="dark-mode-toggle"></button>
-    </div>
+    
 </div>
    
     <!-- Main Content -->
@@ -42,55 +45,7 @@
     <div class="footer-right"><a href="contact.html">Contact</a></div>
 </div>
 
-<script>
-    // Dark Mode Toggle
-    const darkModeToggle = document.getElementById('dark-mode-toggle');
-    const body = document.body;
-    const snowmanImage = document.getElementById('snowman-image'); // Only for index.html
-
-    // Check localStorage for dark mode preference
-    if (localStorage.getItem('dark-mode') === 'enabled') {
-        body.classList.add('dark-mode');
-        if (snowmanImage) {
-            snowmanImage.src = 'snowman-announcement-inverted.jpg'; // Set inverted image
-        }
-    }
-
-    darkModeToggle.addEventListener('click', () => {
-        body.classList.toggle('dark-mode'); // Toggle dark mode class
-
-        // Switch image source based on dark mode state (only for index.html)
-        if (snowmanImage) {
-            if (body.classList.contains('dark-mode')) {
-                snowmanImage.src = 'snowman-announcement-inverted.jpg'; // Inverted image
-            } else {
-                snowmanImage.src = 'snowman-announcement.jpg'; // Original image
-            }
-        }
-
-        // Save preference to localStorage
-        if (body.classList.contains('dark-mode')) {
-            localStorage.setItem('dark-mode', 'enabled');
-        } else {
-            localStorage.setItem('dark-mode', 'disabled');
-        }
-    });
-
-    // Apply dark mode to all pages on load
-    window.addEventListener('load', () => {
-        if (localStorage.getItem('dark-mode') === 'enabled') {
-            body.classList.add('dark-mode');
-            if (snowmanImage) {
-                snowmanImage.src = 'snowman-announcement-inverted.jpg'; // Set inverted image
-            }
-        } else {
-            body.classList.remove('dark-mode');
-            if (snowmanImage) {
-                snowmanImage.src = 'snowman-announcement.jpg'; // Set original image
-            }
-        }
-    });
-</script>
+<script src="drawing.js"></script>
 
 </body>
 </html>

@@ -6,59 +6,7 @@
     <title>Wearfoi</title>
     <link rel="icon" type="image/x-icon" href="favicon.ico">
     <link rel="stylesheet" href="style.css">
-    <style>
-        /* Add only necessary styles for countdown */
-        .countdown-container {
-            text-align: center;
-            margin: 20px auto;
-            max-width: 600px;
-            padding: 0 20px;
-        }
-        
-        .countdown-timer {
-            font-family: 'Courier New', monospace;
-            font-size: 2.5rem;
-            font-weight: bold;
-            letter-spacing: 3px;
-            margin-bottom: 20px;
-            color: #18ff00; /* Default color */
-        }
-        
-        .dark-mode .countdown-timer {
-            color: #18ff00; /* Color for dark mode */
-        }
-        
-        .countdown-image {
-            width: 100%;
-            max-width: 500px;
-            display: block;
-            margin: 0 auto 20px;
-            border-radius: 8px;
-        }
-        
-        .presave-button {
-            display: inline-block;
-            background: #d52b1e;
-            color: white;
-            padding: 12px 30px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            text-decoration: none;
-            border-radius: 50px;
-            margin: 10px 0;
-            transition: background 0.3s;
-        }
-        
-        .presave-button:hover {
-            background: #18ff00;
-        }
-        
-        @media (max-width: 600px) {
-            .countdown-timer {
-                font-size: 1.8rem;
-            }
-        }
-    </style>
+    
 </head>
 <body>
    <div class="header">
@@ -67,6 +15,11 @@
             <img src="logo.png" alt="Logo" class="logo">
         </a>
     </div>
+    <div class="logo-container logo-container-right">
+    <a href="index.html">
+        <img src="logo.png" alt="Logo" class="logo">
+    </a>
+</div>
     
     <div class="header-text">
         <a href="radio.html" class="radio-link">Radio</a>
@@ -74,19 +27,26 @@
         <a href="socials.html" class="socials-link">Socials</a>
     </div>
     
-    <div class="dark-mode-container">
-        <button id="dark-mode-toggle" class="dark-mode-toggle"></button>
-    </div>
-</div>
     
-    <!-- COUNTDOWN SECTION - ADDED CONTENT -->
-    <div class="countdown-container">
-        <div id="countdown-timer" class="countdown-timer">00:00:00:00</div>
-        <img src="aadle-website.jpg" alt="Aadle No Red" class="countdown-image">
-        <a href="https://distrokid.com/hyperfollow/wearfoi/aadle" class="presave-button" target="_blank">
-            PRE-SAVE
-        </a>
+</div>
+
+     <div class="main-content">
+        <h1>Hi</h1>
+        <p>I'm gonna try and put messages here everyday</p>
+        <p>Draw away and listen to <a href="smbh.html" class="song-link">Smoke Money Bill Hanson</a></p>
+        <p>Also</p>
+        <p>If we see people adhering to patterns we're familiar with</p>
+        <p>We start labeling them</p>
+        <p>We put em in a group</p>
+        <p>We start assuming everything else about their life</p>
+        <p>Everything else falls into place like a puzzle piece</p>
+        <p>But no bro</p>
+        <p>Obviously you're not always gonna be wrong about your assumptions</p>
+        <p>But it ain't fair to the person</p>
+        <p>Judge Judy</p>
+        <h1>2025 08 11</h1>
     </div>
+    
 
     <!-- Footer -->
     <div class="footer">
@@ -94,93 +54,8 @@
         <div class="footer-right"><a href="contact.html">Contact</a></div>
     </div>
 
-    <script>
-// Dark Mode Toggle
-const darkModeToggle = document.getElementById('dark-mode-toggle');
-const body = document.body;
-const snowmanImage = document.getElementById('snowman-image'); // Only for index.html
+<script src="drawing.js"></script>
+<script src="scroll.js"></script>
 
-// Check localStorage for dark mode preference
-if (localStorage.getItem('dark-mode') === 'enabled') {
-    body.classList.add('dark-mode');
-    if (snowmanImage) {
-        snowmanImage.src = 'snowman-announcement-inverted.jpg';
-    }
-}
-
-darkModeToggle.addEventListener('click', () => {
-    body.classList.toggle('dark-mode'); // Toggle dark mode class
-
-    // Switch image source based on dark mode state (only for index.html)
-    if (snowmanImage) {
-        if (body.classList.contains('dark-mode')) {
-            snowmanImage.src = 'snowman-announcement-inverted.jpg';
-        } else {
-            snowmanImage.src = 'snowman-announcement.jpg';
-        }
-    }
-
-    // Save preference to localStorage
-    if (body.classList.contains('dark-mode')) {
-        localStorage.setItem('dark-mode', 'enabled');
-    } else {
-        localStorage.setItem('dark-mode', 'disabled');
-    }
-});
-
-// Apply dark mode to all pages on load
-window.addEventListener('load', () => {
-    if (localStorage.getItem('dark-mode') === 'enabled') {
-        body.classList.add('dark-mode');
-        if (snowmanImage) {
-            snowmanImage.src = 'snowman-announcement-inverted.jpg';
-        }
-    } else {
-        body.classList.remove('dark-mode');
-        if (snowmanImage) {
-            snowmanImage.src = 'snowman-announcement.jpg';
-        }
-    }
-});
-
-        
-
-        // COUNTDOWN FUNCTIONALITY - ADDED CONTENT
-        const targetDate = new Date('2025-07-16T19:47:00-04:00'); // 7:47 PM EST in EDT (UTC-4)
-        const countdownElement = document.getElementById('countdown-timer');
-        
-        function updateCountdown() {
-            const now = new Date();
-            const diff = targetDate - now;
-            
-            // Redirect if time has passed
-            if (diff <= 0) {
-                window.location.href = 'smbh.html';
-                return;
-            }
-            
-            // Calculate time units
-            const totalSeconds = Math.floor(diff / 1000);
-            const days = Math.floor(totalSeconds / (3600 * 24));
-            const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
-            const minutes = Math.floor((totalSeconds % 3600) / 60);
-            const seconds = totalSeconds % 60;
-            
-            // Update the display in DD:HH:MM:SS format
-            countdownElement.textContent = 
-                `${days.toString().padStart(2, '0')}:` +
-                `${hours.toString().padStart(2, '0')}:` +
-                `${minutes.toString().padStart(2, '0')}:` +
-                `${seconds.toString().padStart(2, '0')}`;
-        }
-        
-        // Check if we should redirect immediately
-        if (new Date() >= targetDate) {
-            window.location.href = 'smbh.html';
-        } else {
-            setInterval(updateCountdown, 1000);
-            updateCountdown(); // Initial call
-        }
-    </script>
 </body>
 </html>

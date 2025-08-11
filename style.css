@@ -5,6 +5,8 @@ html, body {
     padding: 0;
 }
 
+
+
 body {
     display: flex;
     flex-direction: column;
@@ -12,52 +14,35 @@ body {
     justify-content: center; /* Center content vertically */
     min-height: 100vh; /* Ensure body takes at least the full viewport height */
     font-family: "Trebuchet MS", Trebuchet, sans-serif;
-    background-color: #ffffff;
+    background-color: #000000;
     color: #d52b1e; /* Default text color */
     position: relative;
     transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
 }
 
-/* Dark Mode Styles */
-body.dark-mode {
-    background-color: #000000;
-    color: #d52b1e;
+/* Disable text selection globally */
+body {
+    -webkit-user-select: none; /* Safari */
+    -moz-user-select: none; /* Firefox */
+    -ms-user-select: none; /* IE10+/Edge */
+    user-select: none;
 }
 
-body.dark-mode .header {
-    background-color: #000000;
+/* Re-enable selection for specific elements if needed */
+.footer a, .header-text a, .streaming-button span {
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    user-select: text;
 }
 
-body.dark-mode .dark-mode-toggle {
-    background-color: #ffffff;
-}
-
-body.dark-mode .streaming-button {
-    background-color: #000000;
-    border-color: #d52b1e;
-    color: #d52b1e;
-}
-
-body.dark-mode .footer {
-    background-color: #000000;
-}
-/* Dark Mode Toggle Button */
-.dark-mode-toggle {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    width: 40px;
-    height: 40px;
-    border-radius: 50%; /* Circular button */
-    background-color: rgb(0, 0, 0); /* White button */
-    border: none;
-    cursor: pointer;
-    z-index: 1000;
-    transition: background-color 0.3s ease; /* Smooth transition */
-}
-
-body.dark-mode .dark-mode-toggle {
-    background-color: rgb(255, 255, 255); /* Black button in dark mode */
+/* More aggressive disabling during active drawing */
+body.no-selection * {
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+    cursor: default !important;
 }
 
 /* Logo Spin Animation */
@@ -70,8 +55,50 @@ body.dark-mode .dark-mode-toggle {
     }
 }
 
+/* Main Content Styles */
+.main-content {
+    text-align: center;
+    margin-top: 80px; /* Adjust this value based on your header height */
+    margin-bottom: 60px; /* Adjust this value based on your footer height */
+    padding: 20px;
+    width: 100%;
+    max-width: 800px; /* Optional: limits width for better readability */
+    margin-left: auto;
+    margin-right: auto;
+    color: #18ff00; /* Matching the green color from about.html */
+}
+
+.main-content h1 {
+    font-size: 47px;
+    margin-bottom: 20px;
+    color:#d52b1e;
+}
+
+.main-content p {
+    font-size: 24px;
+    line-height: 1;
+}
+
+.song-link {
+    color: white;
+    text-decoration: none; /* removes underline */
+    /* other styles */
+}
+
+.song-link:hover {
+    color: #d52b1e;
+    /* hover styles */
+}
+canvas {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+}
+
 .logo {
-    width: 50px;
+    width: 47px;
     height: auto;
     cursor: pointer;
     animation: spin 5s linear infinite; /* Spin animation */
@@ -85,25 +112,38 @@ body.dark-mode .dark-mode-toggle {
     right: 0;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: center; /* Center the entire header content */
     padding: 12px 20px;
-    background-color: #ffffff;
+    background-color: #000000;
     z-index: 1000;
     box-sizing: border-box;
-    height: 60px; /* Fixed height */
+    height: 60px;
 }
 
-body.dark-mode .header {
-    background-color: #000000;
-}
+
 
 /* Logo */
+
 .logo-container {
-    flex: 1;
+
     display: flex;
-    z-index: 1002; /* Ensure logo is above other content */
+    z-index: 1002;
     justify-content: flex-start;
     align-items: center;
+    position: absolute; /* Position it absolutely to not affect centering */
+    left: 20px; /* Position it on the left */
+}
+
+/* Right-side Logo */
+.logo-container-right {
+    position: absolute;
+    right: 20px;
+    left: auto; /* Override any left positioning */
+}
+
+/* Reverse spin animation */
+.logo-container-right .logo {
+    animation: spin 5s linear infinite reverse;
 }
 
 .logo {
@@ -113,52 +153,25 @@ body.dark-mode .header {
 }
 
 /* Navigation Links - Centered */
+
 .header-text {
-    flex: 2;
+
     display: flex;
     justify-content: center;
     gap: 20px;
+    flex: 1; /* Allow it to grow and take available space */
+    max-width: 100%; /* Ensure it doesn't overflow */
 }
 
-.header-text a {
-    color: inherit;
-    text-decoration: none;
-    font-size: 18px;
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    height: 100%;
-}
 
-/* Dark Mode Toggle - Right-aligned */
-.dark-mode-container {
-    flex: 1;
-    display: flex;
-    z-index: 1002; /* Ensure toggle is above other content */
-    justify-content: flex-end;
-    align-items: center;
-}
 
-.dark-mode-toggle {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: #000000;
-    border: none;
-    cursor: pointer;
-    z-index: 1003; /* Highest priority */
-    transition: all 0.3s ease;
-}
-
-body.dark-mode .dark-mode-toggle {
-    background-color: #ffffff;
-}
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
     .header {
         padding: 8px 15px;
         height: 50px;
+        justify-content: center; /* Keep centered on tablets */
     }
     
     .logo {
@@ -168,26 +181,67 @@ body.dark-mode .dark-mode-toggle {
     
     .header-text {
         gap: 12px;
+        justify-content: center; /* Center links */
+        margin-left: auto; /* Push to center */
+        margin-right: auto; /* Push to center */
     }
     
     .header-text a {
-        font-size: 16px;
+        font-size: 18px;
     }
     
-    .dark-mode-toggle {
-        width: 25px;
-        height: 25px;
+    .logo-container {
+        position: absolute; /* Keep logo on left */
+        left: 15px;
+    }
+
+    .logo-container-right {
+        position: absolute;
+        right: 15px;
+        left: auto;
+    }
+
+}
+
+@media (max-width: 600px) {
+    /* This can be merged with the 480px query if not needed separately */
+    .header-text {
+        gap: 10px;
+    }
+    
+    .header-text a {
+        font-size: 18px;
     }
 }
 
 @media (max-width: 480px) {
+    .header {
+        padding: 8px 10px;
+    }
+    
     .header-text {
         gap: 8px;
+        justify-content: center; /* Ensure centering */
     }
     
     .header-text a {
-        font-size: 14px;
+        font-size: 18px;
     }
+    
+    .logo-container {
+        left: 10px; /* Adjust logo position */
+    }
+    .logo-container-right {
+        position: absolute;
+        right: 15px;
+        left: auto;
+    }
+
+     .main-content {
+        padding: 50px 10px;
+    }
+    
+
 }
 
 .about-link, .socials-link, .blog-link {
@@ -226,24 +280,7 @@ body.dark-mode .dark-mode-toggle {
     opacity: 1; /* Ensure the image is visible by default */
 }
 
-body.dark-mode .image-container img {
-    opacity: 0; /* Hide original image in dark mode */
-}
 
-body.dark-mode .image-container::after {
-    content: "";
-    display: block;
-    width: 100%;
-    max-width: 500px;
-    height: auto;
-    background-image: url('snowman-announcement-inverted.jpg'); /* Inverted image */
-    background-size: cover;
-    border-radius: 10px;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-}
 
 /* Countdown Timer (Index.html) */
 .countdown-timer {
@@ -260,28 +297,16 @@ button:not(.dark-mode-toggle) {
     padding: 15px 30px;
     font-size: 24px;
     font-weight: bold;
-    color: #d52b1e; /* Black text in light mode */
-    background-color: #ffffff; /* Light mode background */
-    border: 2px solid black; /* Black border in light mode */
+    color: #d52b1e;
+    background-color: #000000; 
+    border: 2px solid black; 
     border-radius: 25px;
     cursor: pointer;
     font-family: 'Libre Baskerville', serif;
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-body.dark-mode button:not(.dark-mode-toggle) {
-    color: #d52b1e; /* White text in dark mode */
-    background-color: #000000; /* Dark mode background */
-    border-color: white; /* White border in dark mode */
-}
 
-button:not(.dark-mode-toggle):hover {
-    background-color: #000000; /* Light mode hover */
-}
-
-body.dark-mode button:not(.dark-mode-toggle):hover {
-    background-color: #ffffff; /* Dark mode hover */
-}
 
 
 /* About Page Styles (About.html) */
@@ -341,7 +366,7 @@ body.dark-mode button:not(.dark-mode-toggle):hover {
     align-items: center;
     gap: 7px;
     padding: 10px 20px;
-    background-color: #ffffff; /* Light mode background */
+    background-color: #000000; /* Light mode background */
     border: 2px solid #d52b1e; /* Light mode border */
     border-radius: 25px;
     text-decoration: none;
@@ -349,19 +374,13 @@ body.dark-mode button:not(.dark-mode-toggle):hover {
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-body.dark-mode .streaming-button {
-    background-color: #000000; /* Dark mode background */
-    border-color: #d52b1e; /* Dark mode border */
-    color: #d52b1e; /* Dark mode text color */
-}
+
 
 .streaming-button:hover {
     background-color: #ffffff; /* Light mode hover */
 }
 
-body.dark-mode .streaming-button:hover {
-    background-color: #000000; /* Dark mode hover */
-}
+
 
 .streaming-logo {
     width: 24px; /* Fixed width */
@@ -401,13 +420,11 @@ body.dark-mode .streaming-button:hover {
     padding: 10px 20px;
     font-size: 18px;
     color: inherit; /* Inherit body color */
-    background-color: #ffffff; /* Light mode background */
+    background-color: #000000; /* Light mode background */
     z-index: 1000; /* Ensure footer is above other content */
 }
 
-body.dark-mode .footer {
-    background-color: #000000; /* Dark mode background */
-}
+
 
 .footer-left, .footer-right {
     flex: 1;
@@ -445,15 +462,12 @@ body.dark-mode .footer {
         top: 0;
         left: 0;
         right: 0;
-        background-color: #ffffff; /* Light mode background */
+        background-color: #000000; /* Light mode background */
         padding: 10px 20px;
         z-index: 1000;
     }
 
-    body.dark-mode .header {
-        background-color: #000000; /* Dark mode background */
-    }
-
+  
     /* Adjust the countdown timer for mobile */
     .countdown-timer {
         font-size: 24px;
@@ -485,13 +499,10 @@ body.dark-mode .footer {
         bottom: 0;
         left: 0;
         right: 0;
-        background-color: #ffffff; /* Light mode background */
+        background-color: #000000; /* Light mode background */
         padding: 10px 20px;
         z-index: 1000;
     }
 
-    body.dark-mode .footer {
-        background-color: #000000; /* Dark mode background */
-    }
+  
 }
-
