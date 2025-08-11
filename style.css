@@ -36,6 +36,28 @@ body {
     user-select: text;
 }
 
+/* Add this to your existing CSS */
+.header-text a {
+    color: inherit; /* Inherits the default color */
+    transition: color 0.2s ease; /* Smooth color transition */
+}
+
+.header-text a:hover {
+    color: #18ff00; /* Red color on hover - change this to whatever color you want */
+    text-decoration: underline; /* Optional: keeps your underline effect */
+}
+
+/* Add this to your existing CSS */
+.footer a {
+    color: inherit; /* Inherits the default color */
+    transition: color 0.2s ease; /* Smooth color transition */
+}
+
+.footer a:hover {
+    color: #18ff00; /* Red color on hover - change to your preferred color */
+    text-decoration: underline; /* Keeps your underline effect */
+}
+
 /* More aggressive disabling during active drawing */
 body.no-selection * {
     -webkit-user-select: none !important;
@@ -252,6 +274,8 @@ canvas {
 
 .about-link:hover, .socials-link:hover, .blog-link:hover {
     text-decoration: underline; /* Underline on hover */
+    transition: color 0.3s ease;
+    color: #d52b1e;
 }
 
 .radio-link {
@@ -402,10 +426,12 @@ button:not(.dark-mode-toggle) {
 .socials-content h1 a {
     color: inherit; /* Inherit body color */
     text-decoration: none; /* No underline by default */
+    transition: color 0.2s ease;
 }
 
 .socials-content h1 a:hover {
     text-decoration: underline; /* Underline on hover */
+    color: #d52b1e;
 }
 
 /* Footer (All Pages) */
