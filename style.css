@@ -80,7 +80,7 @@ body.no-selection * {
 /* Main Content Styles */
 .main-content {
     text-align: center;
-    margin-top: 80px; /* Adjust this value based on your header height */
+    margin-top: 60px; /* Adjust this value based on your header height */
     margin-bottom: 60px; /* Adjust this value based on your footer height */
     padding: 20px;
     width: 100%;
@@ -104,11 +104,13 @@ body.no-selection * {
 .song-link {
     color: white;
     text-decoration: none; /* removes underline */
+    transition: color 0.1s ease;
     /* other styles */
 }
 
 .song-link:hover {
     color: #d52b1e;
+    text-decoration: underline; /* adds underline on hover */
     /* hover styles */
 }
 canvas {
@@ -274,7 +276,7 @@ canvas {
 
 .about-link:hover, .socials-link:hover, .blog-link:hover {
     text-decoration: underline; /* Underline on hover */
-    transition: color 0.3s ease;
+    transition: color 0.1s ease;
     color: #d52b1e;
 }
 
@@ -426,7 +428,7 @@ button:not(.dark-mode-toggle) {
 .socials-content h1 a {
     color: inherit; /* Inherit body color */
     text-decoration: none; /* No underline by default */
-    transition: color 0.2s ease;
+    transition: color 0.1s ease;
 }
 
 .socials-content h1 a:hover {
