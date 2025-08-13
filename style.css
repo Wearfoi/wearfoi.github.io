@@ -20,6 +20,8 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
 }
 
+
+
 /* Disable text selection globally */
 body {
     -webkit-user-select: none; /* Safari */
