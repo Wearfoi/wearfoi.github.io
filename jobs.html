@@ -196,7 +196,7 @@
             }
             
             .header-text a {
-                font-size: 16px;
+                font-size: 18px; /* Increased from 16px to match index.html */
             }
             
             .logo-container {
@@ -205,6 +205,7 @@
 
             .logo-container-right {
                 right: 15px;
+                display: flex; /* Ensure the right logo is visible */
             }
 
             .main-content {
@@ -227,18 +228,23 @@
             }
             
             .header-text a {
-                font-size: 14px;
+                font-size: 18px; /* Increased from 14px to match index.html */
             }
             
             .footer {
-                flex-direction: column;
-                gap: 5px;
-                padding: 8px 15px;
-                font-size: 16px;
+                flex-direction: row; /* Changed from column to row to match index.html */
+                gap: 0; /* Removed gap to match index.html */
+                padding: 10px 15px; /* Adjusted padding to match index.html */
+                font-size: 18px; /* Increased from 16px to match index.html */
             }
             
             .footer-left, .footer-right {
-                text-align: center;
+                text-align: left; /* Changed from center to left for footer-left */
+                flex: 1;
+            }
+            
+            .footer-right {
+                text-align: right; /* Keep right alignment for footer-right */
             }
         }
 
@@ -252,7 +258,7 @@
             }
             
             .header-text a {
-                font-size: 12px;
+                font-size: 18px; /* Increased from 12px to match index.html */
             }
             
             .logo-container {
@@ -261,6 +267,7 @@
             
             .logo-container-right {
                 right: 10px;
+                display: flex; /* Ensure the right logo is visible */
             }
 
             .main-content {
