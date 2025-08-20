@@ -20,7 +20,31 @@ body {
     transition: background-color 0.3s ease, color 0.3s ease; /* Smooth transition */
 }
 
+/* Form Container Styles */
+.form-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
 
+.form-container iframe {
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+}
+
+/* Adjust form height on mobile */
+@media (max-width: 768px) {
+    .form-container iframe {
+        height: 3000px; /* Slightly taller for mobile to ensure all content is visible */
+    }
+    
+    .form-container {
+        padding: 10px;
+    }
+}
 
 /* Disable text selection globally */
 body {
