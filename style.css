@@ -1,4 +1,54 @@
 /* Global Styles */
+
+/* Prevent horizontal scrolling */
+html, body {
+    overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+}
+
+/* Ensure all containers stay within viewport */
+.header, .main-content, .footer {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Specifically fix header content */
+.header-text {
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Ensure images don't cause overflow */
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Additional mobile optimizations */
+@media (max-width: 768px) {
+    .header-text {
+        gap: 10px;
+    }
+    
+    .header-text a {
+        font-size: 16px;
+    }
+    
+    .main-content {
+        padding: 10px;
+    }
+    
+    .main-content h1 {
+        font-size: 32px;
+    }
+    
+    .main-content p {
+        font-size: 18px;
+    }
+}
+
 html, body {
     height: 100%; /* Ensure full height for proper footer positioning */
     margin: 0;
